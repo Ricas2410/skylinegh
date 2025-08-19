@@ -1,0 +1,282 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/login.css' %}">
+<style>
+    /* Custom login page styling */
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .login {
+        background: transparent;
+        padding: 2rem 1rem;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .login #container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 3rem 2rem;
+        max-width: 400px;
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .login #header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .login #header h1 {
+        color: #4f46e5;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .login #header .subtitle {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    
+    .login #content {
+        padding: 0;
+    }
+    
+    .login form {
+        margin: 0;
+    }
+    
+    .login .form-row {
+        margin-bottom: 1.5rem;
+    }
+    
+    .login .form-row label {
+        display: block;
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .login .form-row input[type="text"],
+    .login .form-row input[type="password"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: white;
+        box-sizing: border-box;
+    }
+    
+    .login .form-row input[type="text"]:focus,
+    .login .form-row input[type="password"]:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .login .submit-row {
+        margin-top: 2rem;
+        text-align: center;
+    }
+    
+    .login .submit-row input[type="submit"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    
+    .login .submit-row input[type="submit"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+    }
+    
+    .login .submit-row input[type="submit"]:active {
+        transform: translateY(0);
+    }
+    
+    .login .errornote {
+        background: #fef2f2;
+        border: 2px solid #fca5a5;
+        color: #dc2626;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        text-align: center;
+    }
+    
+    .login .helptext {
+        color: #6b7280;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+    
+    /* Logo styling */
+    .login-logo {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    
+    .login-logo svg {
+        width: 30px;
+        height: 30px;
+        color: white;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+        .login {
+            padding: 1rem 0.5rem;
+        }
+        
+        .login #container {
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+        }
+        
+        .login #header h1 {
+            font-size: 1.75rem;
+        }
+        
+        .login .form-row input[type="text"],
+        .login .form-row input[type="password"] {
+            padding: 0.875rem 1rem;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+    }
+    
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #1e3a8a 100%);
+        }
+        
+        .login #container {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .login #header h1 {
+            color: #818cf8;
+        }
+        
+        .login .form-row label {
+            color: #e2e8f0;
+        }
+        
+        .login .form-row input[type="text"],
+        .login .form-row input[type="password"] {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        
+        .login .form-row input[type="text"]:focus,
+        .login .form-row input[type="password"]:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="header">
+    <div class="login-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+    </div>
+    <h1>Skyline Ghana Admin</h1>
+    <p class="subtitle">Construction Management System</p>
+</div>
+
+{% if form.errors and not form.non_field_errors %}
+    <p class="errornote">
+        {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+    </p>
+{% endif %}
+
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <p class="errornote">{{ error }}</p>
+    {% endfor %}
+{% endif %}
+
+<div id="content-main">
+    {% if user.is_authenticated %}
+        <p class="errornote">
+            {% blocktrans trimmed %}
+                You are authenticated as {{ username }}, but are not authorized to
+                access this page. Would you like to login to a different account?
+            {% endblocktrans %}
+        </p>
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+        <div class="form-row">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.help_text %}
+                <p class="helptext">{{ form.username.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        <div class="form-row">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% if form.password.help_text %}
+                <p class="helptext">{{ form.password.help_text|safe }}</p>
+            {% endif %}
+            <input type="hidden" name="next" value="{{ next }}">
+        </div>
+        <div class="submit-row">
+            <input type="submit" value="{% trans 'Log in' %}">
+        </div>
+    </form>
+</div>
+{% endblock %}

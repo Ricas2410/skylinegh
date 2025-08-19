@@ -1,0 +1,357 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit Service{% else %}Add New Service{% endif %}{% endblock %}
+{% block page_title %}{% if object %}Edit Service{% else %}Add New Service{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            {% if object %}Edit Service{% else %}Add New Service{% endif %}
+        </h2>
+        <p class="text-gray-600">
+            {% if object %}Update service details and information{% else %}Create a new construction service{% endif %}
+        </p>
+    </div>
+    <a href="{% url 'dashboard:service_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Services
+    </a>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <form method="post" enctype="multipart/form-data" class="p-8">
+        {% csrf_token %}
+        
+        <!-- Error Messages -->
+        {% if form.errors %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please correct the following errors:</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Tabbed Interface -->
+        <div class="mb-8">
+            <nav class="flex space-x-8 border-b border-gray-200">
+                <button type="button" onclick="showServiceTab('basic')" id="basic-tab" class="service-tab-button py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">
+                    Basic Information
+                </button>
+                <button type="button" onclick="showServiceTab('content')" id="content-tab" class="service-tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    Content & Features
+                </button>
+                <button type="button" onclick="showServiceTab('images')" id="images-tab" class="service-tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    Images
+                </button>
+                <button type="button" onclick="showServiceTab('seo')" id="seo-tab" class="service-tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    SEO & Settings
+                </button>
+            </nav>
+        </div>
+
+        <!-- Basic Information Tab -->
+        <div id="basic-content" class="service-tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <!-- Service Name -->
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Service Name *
+                        </label>
+                        {{ form.name }}
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Service Category *
+                        </label>
+                        {{ form.category }}
+                    </div>
+
+                    <!-- Short Description -->
+                    <div>
+                        <label for="{{ form.short_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Short Description *
+                        </label>
+                        {{ form.short_description }}
+                        <p class="text-sm text-gray-500 mt-1">Brief description for service cards and listings</p>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Starting Price -->
+                    <div>
+                        <label for="{{ form.starting_price.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Starting Price (GHS)
+                        </label>
+                        {{ form.starting_price }}
+                        <p class="text-sm text-gray-500 mt-1">Leave blank for "Contact for Quote"</p>
+                    </div>
+
+                    <!-- Price Unit -->
+                    <div>
+                        <label for="{{ form.price_unit.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Price Unit
+                        </label>
+                        {{ form.price_unit }}
+                        <p class="text-sm text-gray-500 mt-1">e.g., per sq ft, per room, per project</p>
+                    </div>
+
+                    <!-- Order -->
+                    <div>
+                        <label for="{{ form.order.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Display Order
+                        </label>
+                        {{ form.order }}
+                        <p class="text-sm text-gray-500 mt-1">Lower numbers appear first</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mt-8">
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Basic Description *
+                </label>
+                {{ form.description }}
+                <p class="text-sm text-gray-500 mt-1">General description of the service</p>
+            </div>
+        </div>
+
+        <!-- Content & Features Tab -->
+        <div id="content-content" class="service-tab-content hidden">
+            <div class="space-y-8">
+                <!-- Detailed Description -->
+                <div>
+                    <label for="{{ form.detailed_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Detailed Description
+                    </label>
+                    {{ form.detailed_description }}
+                    <p class="text-sm text-gray-500 mt-1">Comprehensive description for the service page</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Features -->
+                    <div>
+                        <label for="{{ form.features.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Key Features
+                        </label>
+                        {{ form.features }}
+                        <p class="text-sm text-gray-500 mt-1">Enter each feature on a new line</p>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div>
+                        <label for="{{ form.benefits.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Benefits
+                        </label>
+                        {{ form.benefits }}
+                        <p class="text-sm text-gray-500 mt-1">Enter each benefit on a new line</p>
+                    </div>
+
+                    <!-- Process Steps -->
+                    <div>
+                        <label for="{{ form.process_steps.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Process Steps
+                        </label>
+                        {{ form.process_steps }}
+                        <p class="text-sm text-gray-500 mt-1">Enter each step on a new line</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div id="images-content" class="service-tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Service Image -->
+                <div>
+                    <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Service Image
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                        {% if form.image.value %}
+                            <img src="{{ form.image.value.url }}" alt="Service Image" class="max-h-32 mx-auto mb-2 rounded">
+                            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+                        {% endif %}
+                        {{ form.image }}
+                        <p class="text-sm text-gray-500 mt-1">Main service image for cards and listings</p>
+                    </div>
+                </div>
+
+                <!-- Banner Image -->
+                <div>
+                    <label for="{{ form.banner_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Banner Image
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                        {% if form.banner_image.value %}
+                            <img src="{{ form.banner_image.value.url }}" alt="Banner Image" class="max-h-32 mx-auto mb-2 rounded">
+                            <p class="text-xs text-gray-600 mb-2">Current Banner</p>
+                        {% endif %}
+                        {{ form.banner_image }}
+                        <p class="text-sm text-gray-500 mt-1">Banner image for service page header</p>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div>
+                    <label for="{{ form.hero_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Hero Image
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                        {% if form.hero_image.value %}
+                            <img src="{{ form.hero_image.value.url }}" alt="Hero Image" class="max-h-32 mx-auto mb-2 rounded">
+                            <p class="text-xs text-gray-600 mb-2">Current Hero</p>
+                        {% endif %}
+                        {{ form.hero_image }}
+                        <p class="text-sm text-gray-500 mt-1">Large hero image for service page</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO & Settings Tab -->
+        <div id="seo-content" class="service-tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column - SEO -->
+                <div class="space-y-6">
+                    <h3 class="text-lg font-semibold text-gray-900">SEO Settings</h3>
+
+                    <!-- Meta Title -->
+                    <div>
+                        <label for="{{ form.meta_title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Title
+                        </label>
+                        {{ form.meta_title }}
+                        <p class="text-sm text-gray-500 mt-1">SEO title (max 60 characters)</p>
+                    </div>
+
+                    <!-- Meta Description -->
+                    <div>
+                        <label for="{{ form.meta_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Description
+                        </label>
+                        {{ form.meta_description }}
+                        <p class="text-sm text-gray-500 mt-1">SEO description (max 160 characters)</p>
+                    </div>
+
+                    <!-- Meta Keywords -->
+                    <div>
+                        <label for="{{ form.meta_keywords.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Keywords
+                        </label>
+                        {{ form.meta_keywords }}
+                        <p class="text-sm text-gray-500 mt-1">Comma-separated keywords</p>
+                    </div>
+                </div>
+
+                <!-- Right Column - Settings -->
+                <div class="space-y-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Display Settings</h3>
+
+                    <!-- Status Checkboxes -->
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            {{ form.is_featured }}
+                            <label for="{{ form.is_featured.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                                Featured Service (show on homepage)
+                            </label>
+                        </div>
+
+                        <div class="flex items-center">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                                Active (visible to public)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="mt-8 flex items-center justify-end space-x-4">
+            <a href="{% url 'dashboard:service_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200">
+                Cancel
+            </a>
+            <button type="submit" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors duration-200 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {% if object %}Update Service{% else %}Create Service{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Custom form field styling */
+input[type="text"], input[type="number"], select, textarea {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+textarea {
+    @apply min-h-32;
+}
+
+input[type="checkbox"] {
+    @apply h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showServiceTab(tabName) {
+    // Hide all tab contents
+    const contents = document.querySelectorAll('.service-tab-content');
+    contents.forEach(content => content.classList.add('hidden'));
+
+    // Remove active class from all tab buttons
+    const buttons = document.querySelectorAll('.service-tab-button');
+    buttons.forEach(button => {
+        button.classList.remove('border-blue-500', 'text-blue-600');
+        button.classList.add('border-transparent', 'text-gray-500');
+    });
+
+    // Show selected tab content
+    document.getElementById(tabName + '-content').classList.remove('hidden');
+
+    // Add active class to selected tab button
+    const activeButton = document.getElementById(tabName + '-tab');
+    activeButton.classList.remove('border-transparent', 'text-gray-500');
+    activeButton.classList.add('border-blue-500', 'text-blue-600');
+}
+
+// Initialize first tab as active
+document.addEventListener('DOMContentLoaded', function() {
+    showServiceTab('basic');
+});
+</script>
+{% endblock %}

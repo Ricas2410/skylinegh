@@ -1,0 +1,73 @@
+{% load static %}
+<header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <div class="container mx-auto">
+        <div class="flex items-center justify-between py-4">
+            <!-- Logo -->
+            <a href="{% url 'core:home' %}" class="flex items-center space-x-2 text-orange-500 font-bold text-xl">
+                {% if site_settings.logo %}
+                    <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name }}" class="h-10 w-auto">
+                {% else %}
+                    <svg class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10 9 11 1.16.21 2.76.21 3.92 0 5.16-1 9-5.45 9-11V7l-10-5z"/>
+                    </svg>
+                {% endif %}
+                <span>{{ site_settings.site_name|default:"Skyline Ghana" }}</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="{% url 'core:home' %}" class="text-gray-700 hover:text-orange-500 transition-colors">Home</a>
+                <a href="{% url 'core:about' %}" class="text-gray-700 hover:text-orange-500 transition-colors">About</a>
+                <a href="{% url 'services:service_list' %}" class="text-gray-700 hover:text-orange-500 transition-colors">Services</a>
+                <a href="{% url 'projects:project_list' %}" class="text-gray-700 hover:text-orange-500 transition-colors">Projects</a>
+                <a href="{% url 'blog:post_list' %}" class="text-gray-700 hover:text-orange-500 transition-colors">Blog</a>
+                <a href="{% url 'careers:job_list' %}" class="text-gray-700 hover:text-orange-500 transition-colors">Careers</a>
+                <a href="{% url 'core:contact' %}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">Contact</a>
+            </nav>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t transform -translate-y-full transition-transform duration-300">
+            <nav class="p-4 space-y-2">
+                <a href="{% url 'core:home' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">Home</a>
+                <a href="{% url 'core:about' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">About</a>
+                <a href="{% url 'services:service_list' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">Services</a>
+                <a href="{% url 'projects:project_list' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">Projects</a>
+                <a href="{% url 'blog:post_list' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">Blog</a>
+                <a href="{% url 'careers:job_list' %}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-orange-500 rounded-lg transition-colors">Careers</a>
+                <a href="{% url 'core:contact' %}" class="block py-3 px-4 bg-orange-500 text-white hover:bg-orange-600 rounded-lg transition-colors text-center">Contact</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            if (mobileMenu.style.transform === 'translateY(0px)') {
+                mobileMenu.style.transform = 'translateY(-100%)';
+            } else {
+                mobileMenu.style.transform = 'translateY(0px)';
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.style.transform = 'translateY(-100%)';
+            }
+        });
+    }
+});
+</script>

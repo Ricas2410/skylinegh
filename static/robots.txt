@@ -1,0 +1,33 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /api/
+Disallow: /media/private/
+Disallow: /static/admin/
+
+# Allow important directories
+Allow: /static/
+Allow: /media/
+Allow: /services/
+Allow: /projects/
+Allow: /blog/
+Allow: /careers/
+
+# Sitemap location
+Sitemap: https://skylinegh.com/sitemap.xml
+
+# Crawl delay (optional, helps with server load)
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

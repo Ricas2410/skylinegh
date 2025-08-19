@@ -1,0 +1,247 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{{ title }}</h1>
+        <p class="text-gray-600">Upload and manage custom project images for service category pages.</p>
+    </div>
+    <a href="{% url 'dashboard:service_image_list' %}" class="btn-secondary">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Images
+    </a>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <form method="post" enctype="multipart/form-data" class="p-8">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Category -->
+                <div>
+                    <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Service Category *
+                    </label>
+                    {{ form.category }}
+                    {% for error in form.category.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Title -->
+                <div>
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Image Title *
+                    </label>
+                    {{ form.title }}
+                    <p class="text-sm text-gray-500 mt-1">e.g., "Modern Family Home", "Office Complex"</p>
+                    {% for error in form.title.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Location
+                    </label>
+                    {{ form.location }}
+                    <p class="text-sm text-gray-500 mt-1">e.g., "Accra", "East Legon", "Kumasi"</p>
+                    {% for error in form.location.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Completion Year -->
+                <div>
+                    <label for="{{ form.completion_year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Completion Year
+                    </label>
+                    {{ form.completion_year }}
+                    <p class="text-sm text-gray-500 mt-1">Year the project was completed</p>
+                    {% for error in form.completion_year.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Image Upload -->
+                <div>
+                    <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Project Image *
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        {% if form.image.value %}
+                            <img src="{{ form.image.value.url }}" alt="Current Image" class="max-h-48 mx-auto mb-4 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-4">Current Image</p>
+                        {% else %}
+                            <div class="text-gray-400 mb-4">
+                                <svg class="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Upload project image</p>
+                        {% endif %}
+                        {{ form.image }}
+                        <p class="text-xs text-gray-500 mt-2">Recommended: 1200x800px or larger, JPG/PNG format</p>
+                    </div>
+                    {% for error in form.image.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Settings -->
+                <div class="space-y-4">
+                    <!-- Display Order -->
+                    <div>
+                        <label for="{{ form.order.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Display Order
+                        </label>
+                        {{ form.order }}
+                        <p class="text-sm text-gray-500 mt-1">Lower numbers appear first (0 = first)</p>
+                        {% for error in form.order.errors %}
+                            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Featured -->
+                    <div class="flex items-center">
+                        {{ form.is_featured }}
+                        <label for="{{ form.is_featured.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Featured Image (show prominently)
+                        </label>
+                    </div>
+                    {% for error in form.is_featured.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mt-8">
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                Description
+            </label>
+            {{ form.description }}
+            <p class="text-sm text-gray-500 mt-1">Optional description of the project or image details</p>
+            {% for error in form.description.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+            <a href="{% url 'dashboard:service_image_list' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {% if object %}Update Image{% else %}Add Image{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Image preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = imageInput.closest('.border-dashed');
+                    let img = container.querySelector('img');
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.className = 'max-h-48 mx-auto mb-4 rounded-lg';
+                        container.insertBefore(img, imageInput);
+                    }
+                    img.src = e.target.result;
+                    img.alt = 'Preview';
+                    
+                    // Hide the upload icon
+                    const icon = container.querySelector('svg');
+                    if (icon) {
+                        icon.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Mobile-friendly form styling */
+@media (max-width: 768px) {
+    .container-custom {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Make form fields more touch-friendly on mobile */
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        min-height: 44px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    /* Better spacing for mobile */
+    .space-y-6 > * + * {
+        margin-top: 1.5rem;
+    }
+
+    /* Image upload area */
+    .border-dashed {
+        min-height: 200px;
+    }
+
+    /* Button improvements */
+    .btn-primary, .btn-secondary {
+        min-height: 44px;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* Improve image preview on all devices */
+.border-dashed img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+/* Better file input styling */
+input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: white;
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+</style>
+{% endblock %}

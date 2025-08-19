@@ -1,0 +1,202 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Skyline Ghana Admin{% endblock %}
+
+{% block branding %}
+<div class="admin-header" style="padding: 1rem 2rem; background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); margin-bottom: 0;">
+    <h1 id="site-name" style="color: white; font-weight: 600; margin: 0; font-size: 1.5rem;">
+        <a href="{% url 'admin:index' %}" style="color: white; text-decoration: none;">
+            Skyline Ghana Admin
+        </a>
+    </h1>
+    <p style="color: rgba(255, 255, 255, 0.8); margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+        Construction Management System
+    </p>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+    <style>
+        /* Additional inline styles for immediate improvements */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        #header {
+            background: transparent;
+            border-bottom: none;
+        }
+        
+        .breadcrumbs {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            margin: 1rem 2rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .breadcrumbs a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .breadcrumbs a:hover {
+            color: #3730a3;
+            text-decoration: underline;
+        }
+        
+        #content {
+            margin: 0 2rem 2rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .module h2, .module caption, .inline-group h2 {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .dashboard #content {
+            width: auto;
+        }
+        
+        .dashboard .module {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard .module table {
+            margin: 0;
+        }
+        
+        .dashboard .module th {
+            background: #f8fafc;
+            color: #374151;
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .dashboard .module td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .dashboard .module tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Improve form styling */
+        .aligned label {
+            font-weight: 600;
+            color: #374151;
+            width: 180px;
+        }
+        
+        .aligned .form-row {
+            border-bottom: 1px solid #f3f4f6;
+            padding: 1rem 0;
+        }
+        
+        .aligned .form-row:last-child {
+            border-bottom: none;
+        }
+        
+        /* Action buttons */
+        .object-tools {
+            background: transparent;
+            border-radius: 8px;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .object-tools li {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-radius: 8px;
+            margin-left: 0.5rem;
+        }
+        
+        .object-tools a {
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .object-tools a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+        
+        /* Messages */
+        .messagelist {
+            margin: 0 0 1rem 0;
+            padding: 0;
+        }
+        
+        .messagelist li {
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            color: #166534;
+            font-weight: 500;
+            list-style: none;
+        }
+        
+        .messagelist .error {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+        
+        .messagelist .warning {
+            background: #fffbeb;
+            border-color: #fcd34d;
+            color: #d97706;
+        }
+        
+        /* Mobile improvements */
+        @media (max-width: 768px) {
+            #content {
+                margin: 0 1rem 1rem 1rem;
+                padding: 1rem;
+            }
+            
+            .breadcrumbs {
+                margin: 0.5rem 1rem;
+                padding: 0.5rem;
+            }
+            
+            .aligned label {
+                width: auto;
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+            
+            .aligned .form-row {
+                padding: 0.75rem 0;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

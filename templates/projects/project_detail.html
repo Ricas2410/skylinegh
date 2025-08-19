@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ project.meta_title|default:project.title }}{% endblock %}
+{% block meta_description %}{{ project.meta_description }}{% endblock %}
+
+{% block content %}
+<section class="relative bg-slate-900 text-white">
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <nav class="text-sm text-slate-300 mb-4">
+      <a class="hover:text-white" href="/">Home</a>
+      <span class="mx-2">/</span>
+      <a class="hover:text-white" href="{% url 'projects:project_list' %}">Projects</a>
+      <span class="mx-2">/</span>
+      <span class="text-white">{{ project.title }}</span>
+    </nav>
+    <h1 class="text-3xl md:text-4xl font-bold">{{ project.title }}</h1>
+    {% if project.short_description %}
+    <p class="mt-3 text-slate-300 max-w-3xl">{{ project.short_description }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+      {% if project.featured_image %}
+      <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full rounded-xl border border-slate-200 shadow-sm">
+      {% endif %}
+
+      {% if project.description %}
+      <div class="prose prose-slate max-w-none mt-8">
+        {{ project.description|linebreaks }}
+      </div>
+      {% endif %}
+
+      {% if project.has_before_after %}
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-semibold mb-2">Before</h3>
+          <img src="{{ project.before_image.url }}" alt="Before - {{ project.title }}" class="w-full rounded-lg border border-slate-200">
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">After</h3>
+          <img src="{{ project.after_image.url }}" alt="After - {{ project.title }}" class="w-full rounded-lg border border-slate-200">
+        </div>
+      </div>
+      {% endif %}
+
+      {% if project.images.all %}
+      <div class="mt-10">
+        <h3 class="text-lg font-semibold mb-3">Gallery</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {% for img in project.images.all %}
+          <figure class="group">
+            <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:project.title }}" class="w-full h-40 object-cover rounded-lg border border-slate-200 group-hover:opacity-90">
+            {% if img.caption %}
+            <figcaption class="mt-1 text-xs text-slate-600">{{ img.caption }}</figcaption>
+            {% endif %}
+          </figure>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h2 class="text-lg font-semibold">Project Details</h2>
+        <dl class="mt-4 space-y-3 text-sm">
+          {% if project.client_name %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Client</dt>
+            <dd class="font-medium text-slate-900">{{ project.client_name }}</dd>
+          </div>
+          {% endif %}
+          {% if project.location %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Location</dt>
+            <dd class="font-medium text-slate-900">{{ project.location }}</dd>
+          </div>
+          {% endif %}
+          {% if project.project_type %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Category</dt>
+            <dd class="font-medium text-slate-900">{{ project.project_type.name }}</dd>
+          </div>
+          {% endif %}
+          {% if project.service_category %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Service</dt>
+            <dd class="font-medium text-slate-900">{{ project.service_category.name }}</dd>
+          </div>
+          {% endif %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Status</dt>
+            <dd class="font-medium text-slate-900">{{ project.status }}</dd>
+          </div>
+          {% if project.start_date %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Started</dt>
+            <dd class="font-medium text-slate-900">{{ project.start_date }}</dd>
+          </div>
+          {% endif %}
+          {% if project.completion_date %}
+          <div class="flex justify-between border-b border-slate-100 pb-2">
+            <dt class="text-slate-600">Completed</dt>
+            <dd class="font-medium text-slate-900">{{ project.completion_date }}</dd>
+          </div>
+          {% endif %}
+          {% if project.duration_months %}
+          <div class="flex justify-between">
+            <dt class="text-slate-600">Duration</dt>
+            <dd class="font-medium text-slate-900">{{ project.duration_months }} months</dd>
+          </div>
+          {% endif %}
+        </dl>
+      </div>
+
+      {% if project.technologies_used or project.challenges or project.solutions or project.client_testimonial %}
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mt-6 space-y-4">
+        {% if project.technologies_used %}
+        <div>
+          <h3 class="font-semibold">Technologies / Materials</h3>
+          <p class="text-sm text-slate-700 mt-1">{{ project.technologies_used|linebreaksbr }}</p>
+        </div>
+        {% endif %}
+        {% if project.challenges %}
+        <div>
+          <h3 class="font-semibold">Challenges</h3>
+          <p class="text-sm text-slate-700 mt-1">{{ project.challenges|linebreaksbr }}</p>
+        </div>
+        {% endif %}
+        {% if project.solutions %}
+        <div>
+          <h3 class="font-semibold">Solutions</h3>
+          <p class="text-sm text-slate-700 mt-1">{{ project.solutions|linebreaksbr }}</p>
+        </div>
+        {% endif %}
+        {% if project.client_testimonial %}
+        <div>
+          <h3 class="font-semibold">Client Testimonial</h3>
+          <blockquote class="text-sm text-slate-700 mt-1 border-l-4 border-indigo-500 pl-3">{{ project.client_testimonial|linebreaksbr }}</blockquote>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 pb-12">
+  <a href="{% url 'projects:project_list' %}" class="inline-flex items-center text-indigo-600 hover:text-indigo-700">
+    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+    Back to Projects
+  </a>
+</section>
+{% endblock %}

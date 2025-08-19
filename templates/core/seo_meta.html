@@ -1,0 +1,24 @@
+<!-- SEO Meta Tags -->
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+<meta name="keywords" content="{{ keywords }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ canonical_url }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ og_title }}">
+<meta property="og:description" content="{{ og_description }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:site_name" content="Skyline Ghana Constructions">
+{% if og_image %}
+<meta property="og:image" content="{{ og_image }}">
+{% endif %}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ og_description }}">
+{% if og_image %}
+<meta name="twitter:image" content="{{ og_image }}">
+{% endif %}

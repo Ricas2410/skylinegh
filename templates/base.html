@@ -1,0 +1,304 @@
+{% load static %}
+{% load seo_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Mobile-specific meta tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="msapplication-navbutton-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-title" content="Skyline Ghana">
+
+    <!-- Performance hints -->
+    <meta name="format-detection" content="telephone=yes">
+    <meta name="format-detection" content="address=yes">
+
+    <!-- SEO Meta Tags (Simplified) -->
+    {% block seo_meta %}
+        {% seo_meta page_object %}
+    {% endblock %}
+
+    <!-- Google Console Verification -->
+    <meta name="google-site-verification" content="ua6z9w9pJeYey9cv-7U39CZubul1T-xL8xyLklhUJoc" />
+
+    <!-- Structured Data -->
+    {% block structured_data %}
+        {% if page_object %}
+            {% structured_data page_object %}
+        {% else %}
+            {% structured_data %}
+        {% endif %}
+    {% endblock %}
+    
+    <!-- Favicon -->
+    {% if site_settings.favicon %}
+    <link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}">
+    {% endif %}
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Use a modern font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN for a responsive and modern design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+    <!-- Additional CSS -->
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Enhanced Structured Data for Construction Company -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "GeneralContractor",
+        "name": "{{ site_settings.site_name|default:'Skyline Ghana Constructions' }}",
+        "alternateName": ["Skyline GH", "Skylink Construction", "Skyline Ghana"],
+        "description": "{{ site_settings.site_description|default:'Leading construction company in Ghana specializing in residential, commercial, and industrial building projects.' }}",
+        "url": "https://skylinegh.com",
+        {% if site_settings.logo %}"logo": "{{ site_settings.logo.url }}",{% endif %}
+        {% if site_settings.phone_primary %}"telephone": "{{ site_settings.phone_primary }}",{% endif %}
+        {% if site_settings.email_primary %}"email": "{{ site_settings.email_primary }}",{% endif %}
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ site_settings.address_line_1|default:'123 Independence Avenue' }}",
+            "addressLocality": "{{ site_settings.city|default:'East Legon' }}",
+            "addressRegion": "{{ site_settings.region|default:'Greater Accra' }}",
+            "postalCode": "{{ site_settings.postal_code|default:'GA-123-4567' }}",
+            "addressCountry": "Ghana"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "5.6037",
+            "longitude": "-0.1870"
+        },
+        "serviceArea": {
+            "@type": "Country",
+            "name": "Ghana"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Construction Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Residential Construction",
+                        "description": "Custom home building and residential construction services"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Commercial Construction",
+                        "description": "Office buildings, retail spaces, and commercial construction"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Renovation Services",
+                        "description": "Building renovation and remodeling services"
+                    }
+                }
+            ]
+        },
+        "sameAs": [
+            {% if site_settings.facebook_url %}"{{ site_settings.facebook_url }}",{% endif %}
+            {% if site_settings.twitter_url %}"{{ site_settings.twitter_url }}",{% endif %}
+            {% if site_settings.instagram_url %}"{{ site_settings.instagram_url }}",{% endif %}
+            {% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url }}"{% endif %}
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site_settings.site_name }}",
+        "url": "{{ request.scheme }}://{{ request.get_host }}/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ request.scheme }}://{{ request.get_host }}/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <style>
+        /* Custom styles for body and typography */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8; /* Soft light blue-gray background */
+            color: #1a202c; /* Dark gray for text */
+        }
+
+        /* Hero section with a clean, professional background with image */
+        .hero-section {
+            background-image: url('https://th.bing.com/th/id/OIP.YUwrq2fd3kigHJ0ap_2MKgHaEU?w=277&h=180&c=7&r=0&o=7&pid=1.7&rm=3');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            min-height: 500px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 100px;
+            padding-bottom: 80px;
+        }
+
+        /* Add a semi-transparent overlay to the hero section for better text readability */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 50% black overlay */
+        }
+
+        /* Responsive Navbar */
+        #navbar-fixed {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        #navbar-fixed.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Utility for modern buttons */
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(0,118,255,0.39);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background-color: #0056b3;
+            box-shadow: 0 6px 20px 0 rgba(0,118,255,0.49);
+        }
+
+        /* Custom scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f4f8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Mobile menu styling - only hide when class 'hidden' is present */
+        #mobile-menu.hidden { display: none; }
+        #mobile-menu { background-color: white; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg z-50">
+        Skip to main content
+    </a>
+    
+    <!-- Navigation -->
+    {% include 'partials/navigation.html' %}
+    
+    <!-- Main Content -->
+    <main id="main-content" class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+    
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" 
+            class="fixed bottom-6 left-6 z-40 btn-secondary rounded-full p-3 shadow-lg opacity-0 invisible transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 hidden">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p class="text-neutral-600">Loading...</p>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Intentionally left blank: navigation interactions are handled inside templates/partials/navigation.html
+    </script>
+    <!-- Temporarily disabled to avoid conflicts with sample design -->
+    <!-- <script src="{% static 'js/main.js' %}"></script> -->
+
+    <!-- Additional JavaScript -->
+    {% block extra_js %}{% endblock %}
+    
+    <!-- Google Analytics -->
+    {% if site_settings.google_analytics_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site_settings.google_analytics_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ site_settings.google_analytics_id }}');
+    </script>
+    {% endif %}
+    
+    <!-- Back to Top Functionality -->
+    <script>
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.add('opacity-0', 'invisible');
+                backToTopButton.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

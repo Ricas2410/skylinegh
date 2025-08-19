@@ -1,0 +1,201 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit Project{% else %}Add New Project{% endif %}{% endblock %}
+{% block page_title %}{% if object %}Edit Project{% else %}Add New Project{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            {% if object %}Edit Project{% else %}Add New Project{% endif %}
+        </h2>
+        <p class="text-gray-600">
+            {% if object %}Update project details and information{% else %}Create a new construction project{% endif %}
+        </p>
+    </div>
+    <a href="{% url 'dashboard:project_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Projects
+    </a>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <form method="post" enctype="multipart/form-data" class="p-8">
+        {% csrf_token %}
+        
+        <!-- Error Messages -->
+        {% if form.errors %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please correct the following errors:</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Project Title -->
+                <div>
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Project Title *
+                    </label>
+                    {{ form.title }}
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Location *
+                    </label>
+                    {{ form.location }}
+                </div>
+
+                <!-- Client Name -->
+                <div>
+                    <label for="{{ form.client_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Client Name
+                    </label>
+                    {{ form.client_name }}
+                </div>
+
+                <!-- Project Type -->
+                <div>
+                    <label for="{{ form.project_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Project Type *
+                    </label>
+                    {{ form.project_type }}
+                </div>
+
+                <!-- Service Category -->
+                <div>
+                    <label for="{{ form.service_category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Service Category
+                    </label>
+                    {{ form.service_category }}
+                </div>
+
+                <!-- Budget -->
+                <div>
+                    <label for="{{ form.budget.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Budget (GHS)
+                    </label>
+                    {{ form.budget }}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Start Date -->
+                <div>
+                    <label for="{{ form.start_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Start Date
+                    </label>
+                    {{ form.start_date }}
+                </div>
+
+                <!-- End Date -->
+                <div>
+                    <label for="{{ form.end_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        End Date
+                    </label>
+                    {{ form.end_date }}
+                </div>
+
+                <!-- Featured Image -->
+                <div>
+                    <label for="{{ form.featured_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Featured Image
+                    </label>
+                    {% if object and object.featured_image %}
+                        <div class="mb-3">
+                            <img src="{{ object.featured_image.url }}" alt="Current image" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                            <p class="text-sm text-gray-500 mt-1">Current image</p>
+                        </div>
+                    {% endif %}
+                    {{ form.featured_image }}
+                    <p class="text-sm text-gray-500 mt-1">Upload a high-quality image (JPG, PNG, WebP)</p>
+                </div>
+
+                <!-- Options -->
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        {{ form.is_featured }}
+                        <label for="{{ form.is_featured.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Featured Project (show on homepage)
+                        </label>
+                    </div>
+                    <div class="flex items-center">
+                        {{ form.is_published }}
+                        <label for="{{ form.is_published.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Published (visible to public)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mt-8">
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                Project Description *
+            </label>
+            {{ form.description }}
+            <p class="text-sm text-gray-500 mt-1">Provide a detailed description of the project, including scope, materials, and special features.</p>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="mt-8 flex items-center justify-end space-x-4">
+            <a href="{% url 'dashboard:project_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200">
+                Cancel
+            </a>
+            <button type="submit" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors duration-200 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {% if object %}Update Project{% else %}Create Project{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Custom form field styling */
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+textarea {
+    @apply min-h-32;
+}
+
+input[type="file"] {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100;
+}
+
+input[type="checkbox"] {
+    @apply h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded;
+}
+</style>
+{% endblock %}

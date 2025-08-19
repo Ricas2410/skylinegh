@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} | {{ site_settings.site_name|default:"Skyline Ghana Admin" }}</title>
+    
+    <!-- Tailwind CSS -->
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Global custom styles -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        .stat-card {
+            @apply bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+        }
+        .btn-primary {
+            @apply bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-all duration-300;
+        }
+        .btn-secondary {
+            @apply bg-slate-100 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-opacity-50 transition-all duration-300;
+        }
+    </style>
+    
+    <!-- Custom Dashboard CSS -->
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        /* On large screens, do not hide the sidebar even if the class is present */
+        @media (min-width: 1024px) {
+            #sidebar.sidebar-hidden { transform: none; }
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin: 4px 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgb(148 163 184);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(51, 65, 85, 0.5);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .nav-link-active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        .nav-link-active:hover {
+            transform: translateX(0);
+            background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgb(226 232 240);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgb(248 250 252);
+            color: rgb(51 65 85);
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: 1px solid rgb(226 232 240);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: rgb(241 245 249);
+            transform: translateY(-1px);
+        }
+        
+        .sidebar-logo {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .user-avatar {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="dashboard bg-slate-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar-transition sidebar-hidden fixed inset-y-0 left-0 z-50 w-72 bg-slate-950 shadow-2xl lg:static lg:inset-0" aria-hidden="true">
+            <!-- Logo -->
+            <div class="flex items-center justify-between h-20 px-6 border-b border-slate-800/70">
+                <div class="flex items-center">
+                    <div class="sidebar-logo">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-xl">{{ site_settings.site_name|default:"Skyline Ghana Admin" }}</h1>
+                        <p class="text-slate-400 text-sm">Admin Dashboard</p>
+                    </div>
+                </div>
+                <button id="sidebar-close" class="lg:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-2 py-4">
+                <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-7 4h6"></path></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'dashboard:project_list' %}" class="nav-link {% if 'project' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 002 2z"></path></svg>
+                    <span>Projects</span>
+                </a>
+                <a href="{% url 'dashboard:service_list' %}" class="nav-link {% if 'service' in request.resolver_match.view_name and 'service_image' not in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span>Services</span>
+                </a>
+                <a href="{% url 'dashboard:service_image_list' %}" class="nav-link {% if 'service_image' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>Service Images</span>
+                </a>
+                <a href="{% url 'dashboard:inquiry_list' %}" class="nav-link {% if 'inquiry' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    <span>Inquiries</span>
+                </a>
+
+                <div class="px-4 pt-4 pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Management</div>
+                <a href="{% url 'dashboard:career_list' %}" class="nav-link {% if 'career' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span>Careers</span>
+                </a>
+                <a href="{% url 'dashboard:users' %}" class="nav-link {% if request.resolver_match.url_name == 'users' %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m3-4a4 4 0 110-8 4 4 0 010 8zm6 0a4 4 0 100-8 4 4 0 000 8z"/></svg>
+                    <span>Users</span>
+                </a>
+                <a href="{% url 'dashboard:testimonial_list' %}" class="nav-link {% if 'testimonial' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H7l-2 2H5"></path></svg>
+                    <span>Testimonials</span>
+                </a>
+                <a href="{% url 'dashboard:blog_list' %}" class="nav-link {% if 'blog_' in request.resolver_match.view_name %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20l9-5-9-5-9 5 9 5zm0-10l9-5-9-5-9 5 9 5z"></path></svg>
+                    <span>Blog</span>
+                </a>
+                <a href="{% url 'dashboard:analytics' %}" class="nav-link {% if request.resolver_match.url_name == 'analytics' %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3v18M6 8v13M16 13v8M21 6v15"/></svg>
+                    <span>Analytics</span>
+                </a>
+                <a href="{% url 'dashboard:activity' %}" class="nav-link {% if request.resolver_match.url_name == 'activity' %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2 9 3-12 2 8h5"/></svg>
+                    <span>Activity Logs</span>
+                </a>
+                <a href="{% url 'dashboard:settings' %}" class="nav-link {% if request.resolver_match.url_name == 'settings' %}nav-link-active{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m8-6h2M2 12H4m13.66 6.66l1.41 1.41M4.93 4.93l1.41 1.41m0 11.32l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="px-6 py-4 border-t border-slate-800">
+                <div class="flex items-center">
+                    <div class="user-avatar">
+                        <span class="text-white font-bold text-lg">A</span>
+                    </div>
+                    <div>
+                        <p class="text-white font-semibold text-sm">{{ request.user.username|default:'Admin User' }}</p>
+                        <a href="{% url 'dashboard:logout' %}" class="text-xs text-slate-400 hover:text-indigo-400 transition-colors">Logout</a>
+                    </div>
+                    <a href="#" class="ml-auto text-slate-400 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden bg-slate-100">
+            <!-- Header -->
+            <header class="flex flex-wrap items-start sm:items-center justify-between min-h-20 px-4 sm:px-8 py-4 sm:py-3 bg-white border-b border-slate-200 shadow-sm gap-3">
+                <div class="flex items-center">
+                    <button id="sidebar-open" class="lg:hidden mr-6 text-slate-600 hover:text-slate-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-800 leading-tight">{% block page_title %}Dashboard Overview{% endblock %}</h1>
+                        <p class="text-sm text-slate-500 mt-0.5">Welcome back, {{ request.user.username|default:'Admin' }}!</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6 mt-2 sm:mt-0">
+                    <button id="cmdk-open" class="p-2 rounded-full text-slate-500 hover:bg-slate-200/70 hover:text-slate-700 transition-colors" title="Search (Ctrl+K)">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                    <button id="notif-toggle" class="relative p-2 rounded-full text-slate-500 hover:bg-slate-200/70 hover:text-slate-700 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+                    </button>
+                    <!-- Notifications Dropdown -->
+                    <div id="notif-dropdown" class="hidden absolute right-8 top-16 w-96 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-50">
+                        <div class="p-3 border-b border-slate-200 flex items-center justify-between">
+                            <span class="font-semibold text-slate-800">Notifications</span>
+                            <button id="notif-close" class="text-slate-400 hover:text-slate-600">✕</button>
+                        </div>
+                        <div id="notif-body" class="max-h-96 overflow-auto p-0"></div>
+                    </div>
+                    <a href="{% url 'dashboard:project_create' %}" class="btn-primary">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add Project
+                    </a>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-6 mt-6 md:mt-0">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+    
+    <!-- Command Palette (Ctrl+K) -->
+    <div id="cmdk-overlay" class="hidden fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+        <div class="relative mx-auto mt-24 max-w-2xl rounded-2xl bg-white shadow-2xl border border-slate-200">
+            <div class="flex items-center p-3 border-b border-slate-200">
+                <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input id="cmdk-input" type="text" placeholder="Search pages and actions..." class="flex-1 px-3 py-2 outline-none" />
+                <button id="cmdk-close" class="text-slate-500 hover:text-slate-700">Esc</button>
+            </div>
+            <div class="p-2">
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <a href="{% url 'dashboard:project_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Projects</a>
+                    <a href="{% url 'dashboard:service_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Services</a>
+                    <a href="{% url 'dashboard:service_image_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Service Images</a>
+                    <a href="{% url 'dashboard:service_category_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Service Categories</a>
+                    <a href="{% url 'dashboard:career_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Careers</a>
+                    <a href="{% url 'dashboard:blog_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Blog</a>
+                    <a href="{% url 'dashboard:testimonial_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Testimonials</a>
+                    <a href="{% url 'dashboard:analytics' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Analytics</a>
+                    <a href="{% url 'dashboard:settings' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sidebar toggle functionality (mobile)
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOpenBtn = document.getElementById('sidebar-open');
+        const sidebarCloseBtn = document.getElementById('sidebar-close');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function openSidebar() {
+            sidebar.classList.remove('sidebar-hidden');
+            sidebar.setAttribute('aria-hidden', 'false');
+            sidebarOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('sidebar-hidden');
+            sidebar.setAttribute('aria-hidden', 'true');
+            sidebarOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        sidebarOpenBtn?.addEventListener('click', (e) => { e.preventDefault(); openSidebar(); });
+        sidebarCloseBtn?.addEventListener('click', (e) => { e.preventDefault(); closeSidebar(); });
+        sidebarOverlay?.addEventListener('click', closeSidebar);
+
+        // Close sidebar when a nav link is tapped (mobile)
+        document.querySelectorAll('#sidebar a.nav-link').forEach(a => {
+            a.addEventListener('click', () => {
+                if (window.innerWidth < 1024) closeSidebar();
+            });
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && window.innerWidth < 1024) closeSidebar();
+        });
+
+        // On resize to desktop, ensure sidebar is visible and overlay hidden
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('sidebar-hidden');
+                sidebarOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+    
+    <script>
+        // Notifications dropdown functionality
+        const notifToggle = document.getElementById('notif-toggle');
+        const notifDropdown = document.getElementById('notif-dropdown');
+        const notifClose = document.getElementById('notif-close');
+        const notifBody = document.getElementById('notif-body');
+        
+        function toggleNotifDropdown() {
+            notifDropdown.classList.toggle('hidden');
+            if (!notifDropdown.classList.contains('hidden') && notifBody.innerHTML.trim() === '') {
+                fetch('{% url "dashboard:notifications" %}')
+                    .then(r => r.text())
+                    .then(html => { notifBody.innerHTML = html; })
+                    .catch(() => { notifBody.innerHTML = '<div class="p-4 text-slate-600">Failed to load notifications.</div>'; });
+            }
+        }
+        
+        notifToggle?.addEventListener('click', toggleNotifDropdown);
+        notifClose?.addEventListener('click', toggleNotifDropdown);
+    </script>
+    
+    <script>
+        // Command palette functionality
+        const cmdkOpen = document.getElementById('cmdk-open');
+        const cmdkOverlay = document.getElementById('cmdk-overlay');
+        const cmdkClose = document.getElementById('cmdk-close');
+        const cmdkInput = document.getElementById('cmdk-input');
+        
+        function toggleCmdk() {
+            cmdkOverlay.classList.toggle('hidden');
+            if (!cmdkOverlay.classList.contains('hidden')) {
+                setTimeout(() => cmdkInput?.focus(), 50);
+            }
+        }
+        
+        cmdkOpen?.addEventListener('click', toggleCmdk);
+        cmdkClose?.addEventListener('click', toggleCmdk);
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                toggleCmdk();
+            }
+            if (e.key === 'Escape' && !cmdkOverlay.classList.contains('hidden')) {
+                toggleCmdk();
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+    </body>
+    </html>
+
+<style>
+.nav-link {
+    @apply flex items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200;
+}
+
+.nav-link svg {
+    @apply mr-3;
+}
+
+.nav-link-active {
+    @apply bg-primary-100 text-primary-700;
+}
+</style>

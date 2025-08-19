@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Delete Job Posting{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 max-w-2xl mx-auto">
+    <div class="p-6 border-b border-slate-200">
+        <h3 class="text-lg font-semibold text-slate-800">Delete Job Posting</h3>
+    </div>
+    <form method="post" class="p-6">
+        {% csrf_token %}
+        <p class="text-slate-600">Are you sure you want to delete the job posting "<strong>{{ object.title }}</strong>"?</p>
+        <p class="text-sm text-slate-500 mt-2">This action cannot be undone. All associated data will be permanently removed.</p>
+        
+        <div class="mt-8 pt-6 border-t border-slate-200 flex justify-end space-x-4">
+            <a href="{% url 'dashboard:career_list' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="bg-rose-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-opacity-75 transition-all duration-300">Delete Job</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

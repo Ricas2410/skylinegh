@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services | {{ site_settings.site_name }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Services Hero -->
+<section class="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden">
+    <!-- Hero Background Image -->
+    {% if site_settings.services_hero_image %}
+        <div class="absolute inset-0">
+            <img src="{{ site_settings.services_hero_image.url }}" alt="Our Services" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-gray-900/80"></div>
+        </div>
+    {% else %}
+        <div class="absolute inset-0">
+            {% if site_settings.services_hero_image %}
+                <img src="{{ site_settings.services_hero_image.url }}" alt="Construction Services" class="w-full h-full object-cover">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Construction Services" class="w-full h-full object-cover">
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-gray-900/80"></div>
+        </div>
+    {% endif %}
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 bg-pattern opacity-10"></div>
+
+    <div class="relative container mx-auto px-4 text-center text-white">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 lg:mb-6">
+                Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">Services</span>
+            </h1>
+            <p class="text-lg sm:text-xl lg:text-2xl text-blue-200 mb-6 lg:mb-8 max-w-3xl mx-auto">
+                Comprehensive construction solutions from foundation to finish, delivered with excellence and precision.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Overview -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20 animate-on-scroll">
+            <h2 class="text-4xl lg:text-5xl font-heading font-bold text-gray-800 mb-8">
+                Complete <span class="text-gradient">Construction Solutions</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                From residential homes to commercial complexes, we provide end-to-end construction services that meet the highest standards of quality and craftsmanship.
+            </p>
+        </div>
+        
+        {% if categories %}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+                {% for category in categories %}
+                <div class="bg-white rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                    <!-- Category Image -->
+                    {% if category.image %}
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-6 left-6">
+                            <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <h3 class="text-2xl font-bold text-white mb-2">{{ category.name }}</h3>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="p-4 sm:p-6 lg:p-8">
+                        {% if not category.image %}
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mr-4">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
+                                {{ category.name }}
+                            </h3>
+                        </div>
+                        {% endif %}
+
+                        <p class="text-gray-600 mb-8 leading-relaxed">{{ category.description }}</p>
+
+                        {% if category.services.all %}
+                            <div class="space-y-4 mb-8">
+                                {% for service in category.services.all|slice:":3" %}
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="text-gray-700 font-medium">{{ service.name }}</span>
+                                    </div>
+                                {% endfor %}
+                                {% if category.services.all|length > 3 %}
+                                    <p class="text-sm text-gray-500 ml-9 font-medium">And {{ category.services.all|length|add:"-3" }} more services...</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <a href="{% url 'services:category_detail' slug=category.slug %}"
+                           class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-16 animate-on-scroll">
+                <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Services Coming Soon</h3>
+                <p class="text-gray-600 mb-8 max-w-md mx-auto">
+                    We're updating our services section. Please contact us for information about our construction services.
+                </p>
+                <a href="{% url 'core:contact' %}" class="btn-primary">
+                    Contact Us
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20 animate-on-scroll">
+            <h2 class="text-4xl lg:text-5xl font-heading font-bold text-gray-800 mb-8">
+                Why Choose <span class="text-gradient">Skyline Ghana?</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Our commitment to excellence sets us apart in the construction industry.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Quality -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Quality Assurance</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Rigorous quality control processes ensure every project meets our high standards.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">25+ Years Experience</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Decades of experience in residential, commercial, and industrial construction.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Innovation -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Modern Technology</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Latest construction technologies and sustainable building practices.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Safety -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Safety First</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Comprehensive safety protocols protect our workers and your property.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Support -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">24/7 Support</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Round-the-clock support and maintenance services for all our projects.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Warranty -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Quality Guarantee</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Comprehensive warranties on all construction work and materials.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 bg-pattern opacity-10"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <div class="animate-on-scroll">
+            <h2 class="text-4xl lg:text-5xl font-heading font-bold mb-8">
+                Ready to Start Your Project?
+            </h2>
+            <p class="text-xl text-blue-100 mb-12 leading-relaxed max-w-2xl mx-auto">
+                Get a free consultation and quote for your construction project today. Our experts are ready to bring your vision to life.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'core:contact' %}" class="inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:bg-gray-50">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    Get Free Quote
+                </a>
+                <a href="{% url 'projects:project_list' %}" class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-xl font-bold transition-all duration-300 hover:bg-white hover:text-blue-600">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    View Our Work
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

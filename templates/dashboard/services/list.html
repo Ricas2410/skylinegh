@@ -1,0 +1,224 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Service Management{% endblock %}
+{% block page_title %}Service Management{% endblock %}
+
+{% block content %}
+<!-- Stats for Services -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    <div class="stat-card">
+        <div class="text-slate-500 text-sm">Total Services</div>
+        <div class="mt-2 text-3xl font-bold text-slate-800">{{ total_services|default:0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="text-slate-500 text-sm">Active Services</div>
+        <div class="mt-2 text-3xl font-bold text-slate-800">{{ active_services|default:0 }}</div>
+    </div>
+    <div class="hidden xl:block"></div>
+    <div class="hidden xl:block"></div>
+</div>
+<!-- Header with Actions -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Services</h2>
+        <p class="text-gray-600">Manage individual services within categories. Each service gets its own detailed page that visitors can access.</p>
+    </div>
+    <div class="mt-4 lg:mt-0 flex items-center space-x-3">
+        <form method="get" class="hidden md:flex items-center space-x-2">
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search services..." class="w-64 px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+            <select name="category" class="px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">All Categories</option>
+                {% for c in categories %}
+                <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn-secondary" type="submit">Filter</button>
+        </form>
+        <a href="{% url 'dashboard:service_create' %}" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors duration-200 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add New Service
+        </a>
+    </div>
+</div>
+
+<!-- Colorful Category Cards -->
+{% if categories %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  {% for c in categories %}
+  <a href="?category={{ c.id }}" class="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-3 text-white" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+          <span class="text-sm font-bold">{{ c.name|first|upper }}</span>
+        </div>
+        <div>
+          <h4 class="font-semibold text-slate-900">{{ c.name }}</h4>
+          <p class="text-xs text-slate-500">{{ c.short_description|default:c.description|truncatechars:60 }}</p>
+        </div>
+      </div>
+      <span class="text-xs px-2 py-1 rounded-full {{ c.is_active|yesno:'bg-green-100 text-green-700,bg-slate-100 text-slate-600' }}">{{ c.is_active|yesno:'Active,Inactive' }}</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Services by Category -->
+{% regroup services by category as category_list %}
+{% for category in category_list %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+    <!-- Category Header -->
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">{{ category.grouper.name }}</h3>
+                <p class="text-sm text-gray-600">{{ category.grouper.description }}</p>
+            </div>
+            <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                {{ category.list|length }} service{{ category.list|length|pluralize }}
+            </span>
+        </div>
+    </div>
+    
+    <!-- Services Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Projects</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for service in category.list %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">{{ service.name }}</div>
+                            <div class="text-sm text-gray-500">{{ service.short_description|truncatechars:80 }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                            {% if service.starting_price %}
+                                From GHS {{ service.starting_price|floatformat:0 }}
+                                {% if service.price_unit %}/ {{ service.price_unit }}{% endif %}
+                            {% else %}
+                                Contact for Quote
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-900">{{ service.category.project_set.count|default:0 }}</span>
+                            <a href="{% url 'projects:project_list' %}?service={{ service.category.slug }}"
+                               class="text-xs text-primary-600 hover:text-primary-800 font-medium"
+                               title="View projects for this service category">
+                                View
+                            </a>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if service.is_active %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                Inactive
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex items-center space-x-3">
+                            <a href="{{ service.get_absolute_url }}" target="_blank" class="text-primary-600 hover:text-primary-900" title="View Service">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </a>
+                            <a href="{% url 'dashboard:service_edit' service.pk %}" class="text-blue-600 hover:text-blue-900" title="Edit Service">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                            <form action="{% url 'dashboard:service_toggle' service.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-amber-600 hover:text-amber-800" title="Toggle Active">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                            <form action="{% url 'dashboard:service_delete' service.pk %}" method="post" class="inline" onsubmit="return confirm('Delete this service?');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:text-red-800" title="Delete Service">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% empty %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8"></path>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No services found</h3>
+    <p class="text-gray-600 mb-6">Get started by adding your first service.</p>
+    <a href="{% url 'dashboard:service_create' %}" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors duration-200 inline-flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Add New Service
+    </a>
+</div>
+{% endfor %}
+
+<!-- Help Section -->
+<div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+    <div class="flex items-start space-x-3">
+        <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+            <h4 class="text-blue-900 font-medium mb-2">How Services Work</h4>
+            <ul class="text-blue-800 text-sm space-y-1">
+                <li>• <strong>Category Pages:</strong> Visitors see services grouped by category (e.g., /services/finishing-specialized-services/)</li>
+                <li>• <strong>Individual Service Pages:</strong> Each service gets its own detailed page (e.g., /services/finishing-specialized-services/interior-painting/)</li>
+                <li>• <strong>Navigation:</strong> Category pages → Individual service pages → Contact forms</li>
+                <li>• <strong>SEO Benefits:</strong> Each service page can be optimized for search engines</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Service Categories Management -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Service Categories</h3>
+        <a href="{% url 'dashboard:service_category_list' %}" class="text-primary-600 hover:text-primary-700 text-sm font-medium">Manage Categories</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% for category in category_list %}
+        <div class="rounded-lg p-4" style="background: linear-gradient(135deg, #eef2ff, #f5f3ff);">
+            <h4 class="font-medium text-gray-900">{{ category.grouper.name }}</h4>
+            <p class="text-sm text-gray-600 mt-1">{{ category.list|length }} service{{ category.list|length|pluralize }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

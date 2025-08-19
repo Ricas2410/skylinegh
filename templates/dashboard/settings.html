@@ -1,0 +1,903 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Settings{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between max-w-6xl mb-4">
+  <div>
+    <p class="text-slate-600 text-sm">Manage global site settings. Uploads and changes are logged.</p>
+  </div>
+  <a href="{% url 'dashboard:create_backup' %}" class="btn-secondary">Create Backup</a>
+</div>
+
+<!-- Tab Navigation -->
+<div class="max-w-6xl mb-6">
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8">
+      <button onclick="showTab('basic')" id="basic-tab" class="tab-button active py-2 px-1 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600">
+        Basic Information
+      </button>
+      <button onclick="showTab('branding')" id="branding-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Branding & Images
+      </button>
+      <button onclick="showTab('hero')" id="hero-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Hero Images
+      </button>
+      <button onclick="showTab('content')" id="content-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Content Images
+      </button>
+      <button onclick="showTab('seo')" id="seo-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        SEO & Analytics
+      </button>
+    </nav>
+  </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="max-w-6xl">
+  {% csrf_token %}
+  {% if form %}
+
+  <!-- Basic Information Tab -->
+  <div id="basic-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Basic Information</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.site_name.label }}</label>
+        {{ form.site_name }}
+        {% if form.site_name.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.site_name.help_text }}</p>
+        {% endif %}
+        {% for error in form.site_name.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.site_tagline.label }}</label>
+        {{ form.site_tagline }}
+        {% if form.site_tagline.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.site_tagline.help_text }}</p>
+        {% endif %}
+        {% for error in form.site_tagline.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.site_description.label }}</label>
+        {{ form.site_description }}
+        {% if form.site_description.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.site_description.help_text }}</p>
+        {% endif %}
+        {% for error in form.site_description.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h4 class="text-md font-semibold text-gray-900 mt-8 mb-4">Contact Information</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.phone_primary.label }}</label>
+        {{ form.phone_primary }}
+        {% for error in form.phone_primary.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.phone_secondary.label }}</label>
+        {{ form.phone_secondary }}
+        {% for error in form.phone_secondary.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.email_primary.label }}</label>
+        {{ form.email_primary }}
+        {% for error in form.email_primary.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.email_secondary.label }}</label>
+        {{ form.email_secondary }}
+        {% for error in form.email_secondary.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h4 class="text-md font-semibold text-gray-900 mt-8 mb-4">Address</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.address_line_1.label }}</label>
+        {{ form.address_line_1 }}
+        {% for error in form.address_line_1.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.address_line_2.label }}</label>
+        {{ form.address_line_2 }}
+        {% for error in form.address_line_2.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.city.label }}</label>
+        {{ form.city }}
+        {% for error in form.city.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.region.label }}</label>
+        {{ form.region }}
+        {% for error in form.region.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.postal_code.label }}</label>
+        {{ form.postal_code }}
+        {% for error in form.postal_code.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h4 class="text-md font-semibold text-gray-900 mt-8 mb-4">Top Navigation</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.top_navbar_email.label }}</label>
+        {{ form.top_navbar_email }}
+        {% if form.top_navbar_email.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.top_navbar_email.help_text }}</p>
+        {% endif %}
+        {% for error in form.top_navbar_email.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.top_navbar_phone.label }}</label>
+        {{ form.top_navbar_phone }}
+        {% if form.top_navbar_phone.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.top_navbar_phone.help_text }}</p>
+        {% endif %}
+        {% for error in form.top_navbar_phone.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h4 class="text-md font-semibold text-gray-900 mt-8 mb-4">Social Media</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.facebook_url.label }}</label>
+        {{ form.facebook_url }}
+        {% for error in form.facebook_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.twitter_url.label }}</label>
+        {{ form.twitter_url }}
+        {% for error in form.twitter_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.instagram_url.label }}</label>
+        {{ form.instagram_url }}
+        {% for error in form.instagram_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.linkedin_url.label }}</label>
+        {{ form.linkedin_url }}
+        {% for error in form.linkedin_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.youtube_url.label }}</label>
+        {{ form.youtube_url }}
+        {% for error in form.youtube_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h4 class="text-md font-semibold text-gray-900 mt-8 mb-4">Blog Settings</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.blog_url.label }}</label>
+        {{ form.blog_url }}
+        {% if form.blog_url.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.blog_url.help_text }}</p>
+        {% endif %}
+        {% for error in form.blog_url.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div class="flex items-center pt-6">
+        <label class="flex items-center">
+          {{ form.show_blog_in_top_nav }}
+          <span class="ml-2 text-sm text-slate-700">{{ form.show_blog_in_top_nav.label }}</span>
+        </label>
+        {% if form.show_blog_in_top_nav.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.show_blog_in_top_nav.help_text }}</p>
+        {% endif %}
+        {% for error in form.show_blog_in_top_nav.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="md:col-span-2 mt-8">
+      <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.business_hours.label }}</label>
+      {{ form.business_hours }}
+      {% if form.business_hours.help_text %}
+        <p class="mt-1 text-xs text-slate-500">{{ form.business_hours.help_text }}</p>
+      {% endif %}
+      {% for error in form.business_hours.errors %}
+        <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Branding & Images Tab -->
+  <div id="branding-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Branding & Images</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Logo -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.logo.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.logo.value %}
+            <img src="{{ form.logo.value.url }}" alt="Current Logo" class="max-h-20 mx-auto mb-2 rounded">
+            <p class="text-sm text-gray-600 mb-2">Current Logo</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-gray-600">Upload your logo</p>
+          {% endif %}
+          {{ form.logo }}
+          {% if form.logo.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.logo.help_text }}</p>
+          {% endif %}
+          <p class="text-xs text-gray-500 mt-2">Recommended: 500x500px or larger, PNG/JPG format</p>
+        </div>
+        {% for error in form.logo.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Favicon -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.favicon.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.favicon.value %}
+            <img src="{{ form.favicon.value.url }}" alt="Current Favicon" class="max-h-16 mx-auto mb-2 rounded">
+            <p class="text-sm text-gray-600 mb-2">Current Favicon</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-gray-600">Upload favicon</p>
+          {% endif %}
+          {{ form.favicon }}
+          {% if form.favicon.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.favicon.help_text }}</p>
+          {% endif %}
+          <p class="text-xs text-gray-500 mt-2">Recommended: 32x32px or 64x64px, ICO/PNG format</p>
+        </div>
+        {% for error in form.favicon.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Images Tab -->
+  <div id="hero-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Hero Images</h3>
+    <p class="text-sm text-gray-600 mb-6">Upload custom hero background images for different pages. If not uploaded, default fallback images will be used.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Homepage Hero Background -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.hero_background.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.hero_background.value %}
+            <img src="{{ form.hero_background.value.url }}" alt="Homepage Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h36v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2zM6 20v16a2 2 0 002 2h32a2 2 0 002-2V20H6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Homepage Hero</p>
+          {% endif %}
+          {{ form.hero_background }}
+          {% if form.hero_background.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.hero_background.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.hero_background.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Homepage Hero Card -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.hero_card_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.hero_card_image.value %}
+            <img src="{{ form.hero_card_image.value.url }}" alt="Hero Card" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h36v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2zM6 20v16a2 2 0 002 2h32a2 2 0 002-2V20H6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Hero Card</p>
+          {% endif %}
+          {{ form.hero_card_image }}
+          {% if form.hero_card_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.hero_card_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.hero_card_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Services Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.services_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.services_hero_image.value %}
+            <img src="{{ form.services_hero_image.value.url }}" alt="Services Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M19.428 15.428a2 2 0 00-2.856 0l-4 4a2 2 0 102.856 2.856L16 21.716V35a1 1 0 001 1h4a1 1 0 001-1V21.716l.572.572a2 2 0 102.856-2.856l-4-4zM13 12a1 1 0 011-1h20a1 1 0 011 1v2a1 1 0 01-1 1H14a1 1 0 01-1-1v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Services Page</p>
+          {% endif %}
+          {{ form.services_hero_image }}
+          {% if form.services_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.services_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.services_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- About Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.about_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.about_hero_image.value %}
+            <img src="{{ form.about_hero_image.value.url }}" alt="About Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M17 20h5m-2.5-8a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM15 34.5h1m5.6-2.8c.97-.67 2.14-1.2 3.4-1.2s2.43.53 3.4 1.2m-11.8-2.8h1m5.6-2.8c.97-.67 2.14-1.2 3.4-1.2s2.43.53 3.4 1.2M15 40h18a2 2 0 002-2V10a2 2 0 00-2-2H15a2 2 0 00-2 2v28a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">About Page</p>
+          {% endif %}
+          {{ form.about_hero_image }}
+          {% if form.about_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.about_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.about_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Contact Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.contact_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.contact_hero_image.value %}
+            <img src="{{ form.contact_hero_image.value.url }}" alt="Contact Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M3 8l7.89 4.26a2 2 0 001.78 0L21 8m0 0l8.33 4.26a2 2 0 001.78 0L39 8M3 8v32a2 2 0 002 2h38a2 2 0 002-2V8M3 8a2 2 0 012-2h38a2 2 0 012 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Contact Page</p>
+          {% endif %}
+          {{ form.contact_hero_image }}
+          {% if form.contact_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.contact_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.contact_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Projects Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.projects_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.projects_hero_image.value %}
+            <img src="{{ form.projects_hero_image.value.url }}" alt="Projects Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M19 11H9a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zM39 11h-10a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zM19 25H9a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zM39 25h-10a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Projects Page</p>
+          {% endif %}
+          {{ form.projects_hero_image }}
+          {% if form.projects_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.projects_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.projects_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Careers Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.careers_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.careers_hero_image.value %}
+            <img src="{{ form.careers_hero_image.value.url }}" alt="Careers Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M20 7a4 4 0 118 0v1h4a2 2 0 012 2v2.586A1 1 0 0133.586 13L36 15.414A2 2 0 0138 17v4a2 2 0 01-.586 1.414L35 25v10a2 2 0 01-2 2H15a2 2 0 01-2-2V25l-2.414-2.586A2 2 0 0110 21v-4a2 2 0 012-2.414L14.414 13A1 1 0 0115 12.586V10a2 2 0 012-2h4V7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Careers Page</p>
+          {% endif %}
+          {{ form.careers_hero_image }}
+          {% if form.careers_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.careers_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.careers_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Blog Page Hero -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.blog_hero_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.blog_hero_image.value %}
+            <img src="{{ form.blog_hero_image.value.url }}" alt="Blog Hero" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Blog Page</p>
+          {% endif %}
+          {{ form.blog_hero_image }}
+          {% if form.blog_hero_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.blog_hero_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.blog_hero_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Images Tab -->
+  <div id="content-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Content Images</h3>
+    <p class="text-sm text-gray-600 mb-6">Images used in various content sections across the site.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Featured Service Images -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.featured_service_1_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.featured_service_1_image.value %}
+            <img src="{{ form.featured_service_1_image.value.url }}" alt="Featured Service 1" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Construction Service</p>
+          {% endif %}
+          <input type="file" name="{{ form.featured_service_1_image.name }}" accept="image/*" class="hidden" id="id_{{ form.featured_service_1_image.name }}" onchange="previewImage(this, 'preview_{{ form.featured_service_1_image.name }}')">
+          <label for="id_{{ form.featured_service_1_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.featured_service_1_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.featured_service_1_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.featured_service_1_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.featured_service_2_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.featured_service_2_image.value %}
+            <img src="{{ form.featured_service_2_image.value.url }}" alt="Featured Service 2" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M7 21a4 4 0 118 0c0 7-4 9-4 9s-4-2-4-9zM20.1 15a4.5 4.5 0 00.9-.09A6 6 0 1121 15a4.5 4.5 0 00-.9.09zM13 17h8m-8 4h8m-8 4h8m-8 4h3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Design Service</p>
+          {% endif %}
+          <input type="file" name="{{ form.featured_service_2_image.name }}" accept="image/*" class="hidden" id="id_{{ form.featured_service_2_image.name }}" onchange="previewImage(this, 'preview_{{ form.featured_service_2_image.name }}')">
+          <label for="id_{{ form.featured_service_2_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.featured_service_2_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.featured_service_2_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.featured_service_2_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.featured_service_3_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.featured_service_3_image.value %}
+            <img src="{{ form.featured_service_3_image.value.url }}" alt="Featured Service 3" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M20 7l-8-4v20l8-4m0-12l8 4v20l-8-4m0-12v12m0 0l8-4m-8 4l-8 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Materials Service</p>
+          {% endif %}
+          <input type="file" name="{{ form.featured_service_3_image.name }}" accept="image/*" class="hidden" id="id_{{ form.featured_service_3_image.name }}" onchange="previewImage(this, 'preview_{{ form.featured_service_3_image.name }}')">
+          <label for="id_{{ form.featured_service_3_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.featured_service_3_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.featured_service_3_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.featured_service_3_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Content Section Images -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.about_company_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.about_company_image.value %}
+            <img src="{{ form.about_company_image.value.url }}" alt="About Company" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0v4a2 2 0 01-2 2v0a2 2 0 01-2-2v-4m2 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v16a2 2 0 01-2 2h-2a2 2 0 01-2-2zm0 0h4v-2a2 2 0 012-2v0a2 2 0 012 2v2h4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">About Company</p>
+          {% endif %}
+          <input type="file" name="{{ form.about_company_image.name }}" accept="image/*" class="hidden" id="id_{{ form.about_company_image.name }}" onchange="previewImage(this, 'preview_{{ form.about_company_image.name }}')">
+          <label for="id_{{ form.about_company_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.about_company_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.about_company_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.about_company_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.why_choose_us_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.why_choose_us_image.value %}
+            <img src="{{ form.why_choose_us_image.value.url }}" alt="Why Choose Us" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Why Choose Us</p>
+          {% endif %}
+          <input type="file" name="{{ form.why_choose_us_image.name }}" accept="image/*" class="hidden" id="id_{{ form.why_choose_us_image.name }}" onchange="previewImage(this, 'preview_{{ form.why_choose_us_image.name }}')">
+          <label for="id_{{ form.why_choose_us_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.why_choose_us_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.why_choose_us_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.why_choose_us_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.join_team_left_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.join_team_left_image.value %}
+            <img src="{{ form.join_team_left_image.value.url }}" alt="Join Team Left" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M12 4.75a7.25 7.25 0 100 14.5 7.25 7.25 0 000-14.5zM1.25 23c0-.69.56-1.25 1.25-1.25h19c.69 0 1.25.56 1.25 1.25s-.56 1.25-1.25 1.25h-19c-.69 0-1.25-.56-1.25-1.25z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Join Team Left Image</p>
+          {% endif %}
+          <input type="file" name="{{ form.join_team_left_image.name }}" accept="image/*" class="hidden" id="id_{{ form.join_team_left_image.name }}" onchange="previewImage(this, 'preview_{{ form.join_team_left_image.name }}')">
+          <label for="id_{{ form.join_team_left_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.join_team_left_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.join_team_left_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.join_team_left_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Default Images -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.default_testimonial_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.default_testimonial_image.value %}
+            <img src="{{ form.default_testimonial_image.value.url }}" alt="Default Testimonial" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M7 8a3 3 0 013-3h6a3 3 0 013 3v4a3 3 0 01-3 3H9a3 3 0 01-3-3V8zM7 20a3 3 0 013-3h2m0 0a3 3 0 013 3v4a3 3 0 01-3 3H9a3 3 0 01-3-3v-4a3 3 0 013-3m0 0h6m-6 0v4h6v-4m6 0a3 3 0 013-3h6a3 3 0 013 3v4a3 3 0 01-3 3h-6a3 3 0 01-3-3v-4z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Default Testimonial</p>
+          {% endif %}
+          <input type="file" name="{{ form.default_testimonial_image.name }}" accept="image/*" class="hidden" id="id_{{ form.default_testimonial_image.name }}" onchange="previewImage(this, 'preview_{{ form.default_testimonial_image.name }}')">
+          <label for="id_{{ form.default_testimonial_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.default_testimonial_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.default_testimonial_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.default_testimonial_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.default_team_member_image.label }}</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          {% if form.default_team_member_image.value %}
+            <img src="{{ form.default_team_member_image.value.url }}" alt="Default Team Member" class="max-h-24 mx-auto mb-2 rounded">
+            <p class="text-xs text-gray-600 mb-2">Current Image</p>
+          {% else %}
+            <div class="text-gray-400 mb-2">
+              <svg class="mx-auto h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7v2a1 1 0 001 1h12a1 1 0 001-1v-2a7 7 0 00-7-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <p class="text-xs text-gray-600">Default Team Member</p>
+          {% endif %}
+          <input type="file" name="{{ form.default_team_member_image.name }}" accept="image/*" class="hidden" id="id_{{ form.default_team_member_image.name }}" onchange="previewImage(this, 'preview_{{ form.default_team_member_image.name }}')">
+          <label for="id_{{ form.default_team_member_image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose Image
+          </label>
+          {% if form.default_team_member_image.help_text %}
+            <p class="mt-2 text-xs text-slate-500">{{ form.default_team_member_image.help_text }}</p>
+          {% endif %}
+        </div>
+        {% for error in form.default_team_member_image.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO & Analytics Tab -->
+  <div id="seo-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">SEO & Analytics</h3>
+    <div class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.meta_keywords.label }}</label>
+        {{ form.meta_keywords }}
+        {% if form.meta_keywords.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.meta_keywords.help_text }}</p>
+        {% endif %}
+        {% for error in form.meta_keywords.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.meta_description.label }}</label>
+        {{ form.meta_description }}
+        {% if form.meta_description.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.meta_description.help_text }}</p>
+        {% endif %}
+        {% for error in form.meta_description.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.google_analytics_id.label }}</label>
+        {{ form.google_analytics_id }}
+        {% if form.google_analytics_id.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.google_analytics_id.help_text }}</p>
+        {% endif %}
+        {% for error in form.google_analytics_id.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Button -->
+  <div class="mt-8 flex justify-end">
+    <button type="submit" class="btn-primary">Save Settings</button>
+  </div>
+
+  {% else %}
+  <p class="text-slate-600">Settings placeholder. Wire up a form to manage `SiteSettings` or other configuration here.</p>
+  {% endif %}
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function() {
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="url"], input[type="number"], textarea');
+    inputs.forEach(el => el.classList.add('w-full','px-4','py-2.5','border','border-slate-300','rounded-lg','focus:outline-none','focus:ring-2','focus:ring-indigo-500','focus:border-indigo-500'));
+    const selects = document.querySelectorAll('select');
+    selects.forEach(el => el.classList.add('w-full','px-4','py-2.5','border','border-slate-300','rounded-lg','focus:outline-none','focus:ring-2','focus:ring-indigo-500','focus:border-indigo-500'));
+
+    // Autosize textareas
+    const textareas = document.querySelectorAll('textarea');
+    function autoResize(el){
+      el.style.height = 'auto';
+      el.style.overflowY = 'hidden';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+    textareas.forEach(t => {
+      // start compact; expand on input or if prefilled
+      t.style.minHeight = '44px';
+      t.style.maxHeight = '480px';
+      if (t.value && t.value.trim().length > 0) { autoResize(t); }
+      t.addEventListener('input', () => autoResize(t));
+    });
+  })();
+
+  // Tab functionality
+  function showTab(tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+      content.classList.add('hidden');
+    });
+
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+      button.classList.remove('active', 'border-indigo-500', 'text-indigo-600');
+      button.classList.add('border-transparent', 'text-gray-500');
+    });
+
+    // Show selected tab content
+    const selectedContent = document.getElementById(tabName + '-content');
+    if (selectedContent) {
+      selectedContent.classList.remove('hidden');
+    }
+
+    // Add active class to selected tab button
+    const selectedButton = document.getElementById(tabName + '-tab');
+    if (selectedButton) {
+      selectedButton.classList.add('active', 'border-indigo-500', 'text-indigo-600');
+      selectedButton.classList.remove('border-transparent', 'text-gray-500');
+    }
+  }
+
+  // Image preview function
+  function previewImage(input, previewId) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+          preview.src = e.target.result;
+        }
+        // Update the image in the upload area
+        const container = input.closest('.border-dashed');
+        const existingImg = container.querySelector('img');
+        if (existingImg) {
+          existingImg.src = e.target.result;
+        } else {
+          // Create new image element if none exists
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.alt = 'Preview';
+          img.className = 'max-h-24 mx-auto mb-2 rounded';
+          const iconDiv = container.querySelector('.text-gray-400');
+          if (iconDiv) {
+            iconDiv.parentNode.insertBefore(img, iconDiv);
+            iconDiv.style.display = 'none';
+          }
+        }
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // Initialize first tab as active
+  document.addEventListener('DOMContentLoaded', function() {
+    showTab('basic');
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{% if object %}Edit Testimonial{% else %}New Testimonial{% endif %}{% endblock %}
+{% block page_title %}{% if object %}Edit Testimonial{% else %}New Testimonial{% endif %}{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 max-w-3xl">
+  {% csrf_token %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+      {{ form.name }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">Position</label>
+      {{ form.position }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">Company</label>
+      {{ form.company }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">Rating (1-5)</label>
+      {{ form.rating }}
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-slate-700 mb-1">Content</label>
+      {{ form.content }}
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-slate-700 mb-1">Image</label>
+      {{ form.image }}
+      {% if object and object.image %}
+      <div class="mt-2">
+        <img src="{{ object.image.url }}" alt="{{ object.name }}" class="w-24 h-24 rounded-full object-cover">
+      </div>
+      {% endif %}
+    </div>
+    <div>
+      <label class="inline-flex items-center space-x-2">
+        {{ form.is_featured }}
+        <span class="text-slate-700">Featured</span>
+      </label>
+    </div>
+    <div>
+      <label class="inline-flex items-center space-x-2">
+        {{ form.is_active }}
+        <span class="text-slate-700">Active</span>
+      </label>
+    </div>
+  </div>
+  <div class="mt-6 flex items-center space-x-3">
+    <button class="btn-primary" type="submit">Save</button>
+    <a href="{% url 'dashboard:testimonial_list' %}" class="btn-secondary">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Apply Tailwind-like classes to default widgets if not using crispy/forms helper
+  (function() {
+    const textInputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+    textInputs.forEach(el => {
+      el.classList.add('w-full','px-4','py-2.5','border','border-slate-300','rounded-lg','focus:outline-none','focus:ring-2','focus:ring-indigo-500','focus:border-indigo-500');
+    });
+    const selects = document.querySelectorAll('select');
+    selects.forEach(el => el.classList.add('w-full','px-4','py-2.5','border','border-slate-300','rounded-lg','focus:outline-none','focus:ring-2','focus:ring-indigo-500','focus:border-indigo-500'));
+  })();
+</script>
+{% endblock %}
+
+{% comment %}
+Helper filters if available. If not, widgets still styled via JS above.
+{% endcomment %}
+{% load static %}
+{% load i18n %}

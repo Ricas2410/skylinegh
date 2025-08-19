@@ -1,0 +1,41 @@
+# Core Django
+Django==5.2.5
+python-decouple>=3.8
+
+# Database
+psycopg2-binary>=2.9.0
+dj-database-url>=2.0.0
+
+# Caching
+redis>=4.5.0
+django-redis>=5.2.0
+
+# Image handling
+Pillow>=10.0.0
+imagekitio>=3.0.0
+
+# Utilities used in apps
+readtime>=2.0.0
+
+# Forms and validation
+django-crispy-forms>=2.0
+crispy-tailwind>=0.5.0
+
+# API
+djangorestframework>=3.14.0
+
+# Security
+django-cors-headers>=4.0.0
+
+# File storage
+django-storages>=1.13.0
+
+# Utilities
+django-extensions>=3.2.0
+
+# Production server
+gunicorn>=21.0.0
+whitenoise>=6.5.0
+
+# Monitoring
+sentry-sdk>=1.25.0

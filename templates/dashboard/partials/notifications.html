@@ -1,0 +1,26 @@
+{% if logs %}
+<ul class="divide-y divide-slate-200">
+  {% for log in logs %}
+  <li class="p-3 hover:bg-slate-50">
+    <div class="flex items-start">
+      <div class="mt-0.5 mr-3">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-sm font-semibold">{{ log.action|slice:":1"|upper }}</span>
+      </div>
+      <div class="flex-1">
+        <p class="text-sm text-slate-800">
+          <span class="font-medium">{{ log.user.username|default:"System" }}</span>
+          {{ log.action }}
+          <span class="text-slate-600">{{ log.model_name }}</span>
+        </p>
+        {% if log.message %}
+        <p class="text-xs text-slate-500 mt-0.5">{{ log.message }}</p>
+        {% endif %}
+        <p class="text-xs text-slate-400 mt-1">{{ log.created_at|timesince }} ago</p>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="p-4 text-slate-600">No recent notifications.</div>
+{% endif %}

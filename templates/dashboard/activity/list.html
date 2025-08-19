@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Activity Logs{% endblock %}
+{% block page_title %}Activity Logs{% endblock %}
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+  <form method="get" class="flex items-center space-x-3">
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search logs..." class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+    <button class="btn-secondary">Search</button>
+  </form>
+</div>
+
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">When</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">User</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Action</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Model</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Object ID</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Message</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200">
+      {% for log in logs %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 text-slate-700 whitespace-nowrap">{{ log.created_at|date:'M j, Y, g:i a' }}</td>
+        <td class="px-4 py-3 text-slate-700">{{ log.user.username|default:'system' }}</td>
+        <td class="px-4 py-3 text-slate-700"><span class="inline-flex items-center px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-xs font-medium">{{ log.get_action_display }}</span></td>
+        <td class="px-4 py-3 text-slate-700">{{ log.model_name }}</td>
+        <td class="px-4 py-3 text-slate-700">{{ log.object_id }}</td>
+        <td class="px-4 py-3 text-slate-700">{{ log.message }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td class="px-4 py-6 text-center text-slate-500" colspan="6">No activity found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div class="flex justify-between items-center mt-6 text-sm">
+  <div class="text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+  <div class="space-x-2">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="btn-secondary">Previous</a>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="btn-secondary">Next</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

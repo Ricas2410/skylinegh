@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Blog{% endblock %}
+{% block page_title %}Blog Posts{% endblock %}
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+  <form method="get" class="flex items-center space-x-3">
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search posts..." class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+    <button class="btn-secondary">Search</button>
+  </form>
+  <a href="{% url 'dashboard:blog_create' %}" class="btn-primary">
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/></svg>
+    New Post
+  </a>
+</div>
+
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Title</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Category</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Published</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200">
+      {% for p in posts %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3">
+          <div class="font-semibold text-slate-800">{{ p.title }}</div>
+          <div class="text-sm text-slate-500">by {{ p.author }} • {{ p.created_at|date:'M j, Y' }}</div>
+        </td>
+        <td class="px-4 py-3">
+          {% if p.status == 'published' %}
+            <span class="text-green-600 font-medium">Published</span>
+          {% elif p.status == 'draft' %}
+            <span class="text-slate-500">Draft</span>
+          {% else %}
+            <span class="text-amber-600">Archived</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3 text-slate-700">{{ p.category.name|default:'-' }}</td>
+        <td class="px-4 py-3 text-slate-700">{{ p.published_at|date:'M j, Y, g:i a'|default:'-' }}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'dashboard:blog_edit' p.pk %}" class="text-indigo-600 hover:text-indigo-800 font-medium">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td class="px-4 py-6 text-center text-slate-500" colspan="5">No blog posts yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div class="flex justify-between items-center mt-6 text-sm">
+  <div class="text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+  <div class="space-x-2">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="btn-secondary">Previous</a>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="btn-secondary">Next</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Analytics Overview{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+  <div class="stat-card">
+    <div class="text-slate-500 text-sm">Visitors Today</div>
+    <div class="mt-2 text-3xl font-bold text-slate-800">{{ visitors_today|default:0 }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="text-slate-500 text-sm">Visitors (7 days)</div>
+    <div class="mt-2 text-3xl font-bold text-slate-800">{{ visitors_7d|default:0 }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="text-slate-500 text-sm">Visitors (30 days)</div>
+    <div class="mt-2 text-3xl font-bold text-slate-800">{{ visitors_30d|default:0 }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="text-slate-500 text-sm">Visitors (365 days)</div>
+    <div class="mt-2 text-3xl font-bold text-slate-800">{{ visitors_365d|default:0 }}</div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+  <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
+    <h3 class="text-lg font-semibold text-slate-800 mb-4">Last 14 Days</h3>
+    <div class="h-56 flex items-end space-x-2">
+      {% with max_val=0 %}{% endwith %}
+      {% for p in visitors_series %}
+        {% if forloop.first %}{% with max_val=p.value %}{% endwith %}{% endif %}
+      {% endfor %}
+      {% comment %}Simple bar chart without JS{% endcomment %}
+      {% for p in visitors_series %}
+        {% with h=p.value|add:1 %}
+        <div class="flex-1 flex flex-col items-center">
+          <div class="w-full bg-indigo-100 rounded-t-md" style="height: {{ p.value|floatformat:0 }}px"></div>
+          <div class="text-[10px] text-slate-500 mt-1">{{ p.date|slice:"5:10" }}</div>
+        </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 p-6">
+    <h3 class="text-lg font-semibold text-slate-800 mb-4">Content Summary</h3>
+    <ul class="space-y-3 text-slate-700">
+      <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-3"></span> Total Inquiries: <span class="font-semibold ml-1">{{ inquiries_count|default:0 }}</span></li>
+      <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-indigo-500 mr-3"></span> Projects: <span class="font-semibold ml-1">{{ projects_count|default:0 }}</span></li>
+      <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-amber-500 mr-3"></span> Published Posts: <span class="font-semibold ml-1">{{ posts_count|default:0 }}</span></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

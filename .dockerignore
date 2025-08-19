@@ -1,0 +1,97 @@
+# Git
+.git
+.gitignore
+README.md
+IMPROVEMENTS.md
+*.md
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Virtual environments
+skyline_env/
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local development
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Media files (using ImageKit)
+media/
+
+# Static files (will be collected during build)
+staticfiles/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Documentation
+docs/
+*.txt
+!requirements.txt
+
+# Deployment
+fly.toml.bak
+Dockerfile.bak
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/

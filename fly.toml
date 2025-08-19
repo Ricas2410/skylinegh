@@ -1,0 +1,53 @@
+app = "skylinkgh"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[deploy]
+  strategy = "immediate"
+  max_unavailable = 0.5
+
+[env]
+  DJANGO_SETTINGS_MODULE = "skylinegh.production_settings"
+  PORT = "8000"
+  PYTHONUNBUFFERED = "1"
+  PYTHONDONTWRITEBYTECODE = "1"
+  WEB_CONCURRENCY = "2"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  max_machines_running = 2
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "30s"
+    interval = "15s"
+    method = "GET"
+    timeout = "5s"
+    path = "/healthz"
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 200
+    soft_limit = 150
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+[processes]
+  app = "/entrypoint.sh"
+
+[[statics]]
+  guest_path = "/app/staticfiles"
+  url_prefix = "/static/"
+
+[metrics]
+  port = 9091
+  path = "/metrics"

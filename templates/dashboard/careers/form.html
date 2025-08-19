@@ -1,0 +1,94 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}{% if form.instance.pk %}Edit Job Posting{% else %}Create Job Posting{% endif %}{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+    <div class="p-6 border-b border-slate-200">
+        <h3 class="text-lg font-semibold text-slate-800">{% if form.instance.pk %}Edit Job Posting{% else %}Create Job Posting{% endif %}</h3>
+        <p class="text-sm text-slate-500 mt-1">Fill out the form below to {% if form.instance.pk %}update the{% else %}add a new{% endif %} job posting.</p>
+    </div>
+    <form method="post" class="p-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <div>
+                    <label for="id_title" class="block text-sm font-medium text-slate-700">Job Title</label>
+                    {{ form.title }}
+                </div>
+                <div>
+                    <label for="id_department" class="block text-sm font-medium text-slate-700">Department</label>
+                    {{ form.department }}
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label for="id_job_type" class="block text-sm font-medium text-slate-700">Job Type</label>
+                        {{ form.job_type }}
+                    </div>
+                    <div>
+                        <label for="id_experience_level" class="block text-sm font-medium text-slate-700">Experience Level</label>
+                        {{ form.experience_level }}
+                    </div>
+                </div>
+                <div>
+                    <label for="id_location" class="block text-sm font-medium text-slate-700">Location</label>
+                    {{ form.location }}
+                </div>
+                <div>
+                    <label for="id_summary" class="block text-sm font-medium text-slate-700">Summary</label>
+                    {{ form.summary }}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <div>
+                    <label for="id_status" class="block text-sm font-medium text-slate-700">Status</label>
+                    {{ form.status }}
+                </div>
+                <div>
+                    <label for="id_application_deadline" class="block text-sm font-medium text-slate-700">Application Deadline</label>
+                    {{ form.application_deadline }}
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        {{ form.is_featured }}
+                        <label for="id_is_featured" class="ml-2 block text-sm text-slate-900">Featured</label>
+                    </div>
+                    <div class="flex items-center">
+                        {{ form.is_urgent }}
+                        <label for="id_is_urgent" class="ml-2 block text-sm text-slate-900">Urgent</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Width -->
+            <div class="md:col-span-2 space-y-6">
+                <div>
+                    <label for="id_description" class="block text-sm font-medium text-slate-700">Description</label>
+                    {{ form.description }}
+                </div>
+                <div>
+                    <label for="id_responsibilities" class="block text-sm font-medium text-slate-700">Responsibilities</label>
+                    {{ form.responsibilities }}
+                </div>
+                <div>
+                    <label for="id_requirements" class="block text-sm font-medium text-slate-700">Requirements</label>
+                    {{ form.requirements }}
+                </div>
+                <div>
+                    <label for="id_qualifications" class="block text-sm font-medium text-slate-700">Qualifications</label>
+                    {{ form.qualifications }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="mt-8 pt-6 border-t border-slate-200 flex justify-end space-x-4">
+            <a href="{% url 'dashboard:career_list' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">{% if form.instance.pk %}Update{% else %}Create{% endif %} Job</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,341 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Overview{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="stat-card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Total Projects</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">{{ total_projects }}</p>
+                <p class="text-sm text-slate-500 mt-2"><span class="font-semibold text-green-500">{{ completed_projects }}</span> completed</p>
+            </div>
+            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center">
+                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Active Projects</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">{{ active_projects }}</p>
+                <p class="text-sm text-slate-500 mt-2"><span class="font-semibold text-blue-500">{{ planning_projects }}</span> in planning</p>
+            </div>
+            <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Total Inquiries</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">{{ total_inquiries }}</p>
+                <p class="text-sm text-slate-500 mt-2"><span class="font-semibold text-amber-500">{{ new_inquiries }}</span> new this week</p>
+            </div>
+            <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center">
+                <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Job Applications</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">{{ job_applications }}</p>
+                <p class="text-sm text-slate-500 mt-2"><span class="font-semibold text-rose-500">{{ new_applications }}</span> new this week</p>
+            </div>
+            <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center">
+                <svg class="w-7 h-7 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 21a6 6 0 006-5.197M12 12a4 4 0 110-8 4 4 0 010 8z"></path></svg>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Visitors Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="rounded-2xl p-6 shadow-sm border border-indigo-200 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm/5 opacity-80">Visitors Today</p>
+                <p class="text-3xl font-bold mt-1">{{ visitors_today|default:0 }}</p>
+            </div>
+            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M7 13l4-4 3 3 4-4"/></svg>
+            </div>
+        </div>
+        <div class="mt-4 h-10">
+            <canvas id="spark-today" height="40"></canvas>
+        </div>
+    </div>
+    <div class="rounded-2xl p-6 shadow-sm border border-emerald-200 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm/5 opacity-80">Visitors (7 days)</p>
+                <p class="text-3xl font-bold mt-1">{{ visitors_7d|default:0 }}</p>
+            </div>
+            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V3m0 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+            </div>
+        </div>
+        <div class="mt-4 h-10">
+            <canvas id="spark-7d" height="40"></canvas>
+        </div>
+    </div>
+    <div class="rounded-2xl p-6 shadow-sm border border-amber-200 bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm/5 opacity-80">Visitors (30 days)</p>
+                <p class="text-3xl font-bold mt-1">{{ visitors_30d|default:0 }}</p>
+            </div>
+            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </div>
+        </div>
+        <div class="mt-4 h-10">
+            <canvas id="spark-30d" height="40"></canvas>
+        </div>
+    </div>
+    <div class="rounded-2xl p-6 shadow-sm border border-rose-200 bg-gradient-to-br from-rose-500 to-rose-600 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm/5 opacity-80">Visitors (365 days)</p>
+                <p class="text-3xl font-bold mt-1">{{ visitors_365d|default:0 }}</p>
+            </div>
+            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h6"/></svg>
+            </div>
+        </div>
+        <div class="mt-4 h-10">
+            <canvas id="spark-365d" height="40"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Visitors Chart -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="p-6 flex items-center justify-between border-b border-slate-200">
+            <h3 class="text-lg font-semibold text-slate-800">Visitors</h3>
+            <div class="inline-flex rounded-lg overflow-hidden border border-slate-200">
+                <button class="px-3 py-1.5 text-sm bg-slate-50 hover:bg-slate-100" data-range="14">14d</button>
+                <button class="px-3 py-1.5 text-sm bg-slate-50 hover:bg-slate-100" data-range="30">30d</button>
+                <button class="px-3 py-1.5 text-sm bg-slate-50 hover:bg-slate-100" data-range="90">90d</button>
+            </div>
+        </div>
+        <div class="p-6">
+            <canvas id="visitorsChart" height="120"></canvas>
+        </div>
+    </div>
+    <!-- Recent Projects -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="p-6 flex items-center justify-between border-b border-slate-200">
+            <h3 class="text-lg font-semibold text-slate-800">Recent Projects</h3>
+            <a href="{% url 'dashboard:project_list' %}" class="btn-secondary">View All</a>
+        </div>
+        <div class="p-4">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Project</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Value</th>
+                            <th scope="col" class="relative px-6 py-3">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        {% for project in recent_projects %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        {% if project.featured_image %}
+                                            <img class="h-10 w-10 rounded-lg object-cover" src="{{ project.featured_image.url }}" alt="">
+                                        {% else %}
+                                            <div class="h-10 w-10 rounded-lg bg-slate-200 flex items-center justify-center">
+                                                <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-slate-900">{{ project.title }}</div>
+                                        <div class="text-sm text-slate-500">{{ project.project_type }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if project.status == 'Planning' %}
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">{{ project.status }}</span>
+                                {% elif project.status == 'In Progress' %}
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ project.status }}</span>
+                                {% elif project.status == 'Completed' %}
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ project.status }}</span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">{{ project.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">$2,500,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{% url 'dashboard:project_edit' project.pk %}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-12">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                <p class="text-slate-600 mb-2 font-semibold">No projects yet</p>
+                                <p class="text-slate-500 mb-4 text-sm">Get started by creating a new project.</p>
+                                <a href="{% url 'dashboard:project_create' %}" class="btn-primary">Add your first project</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="p-6 border-b border-slate-200">
+                <h3 class="text-lg font-semibold text-slate-800">Quick Actions</h3>
+            </div>
+            <div class="p-4">
+                <div class="space-y-2">
+                    <a href="{% url 'dashboard:project_create' %}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <span>Add New Project</span>
+                    </a>
+                    <a href="{% url 'dashboard:service_create' %}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span>Add New Service</span>
+                    </a>
+                    <a href="{% url 'dashboard:inquiry_list' %}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span>View Inquiries</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="p-6 border-b border-slate-200">
+                <h3 class="text-lg font-semibold text-slate-800">Recent Activity</h3>
+            </div>
+            <div class="p-6 flow-root">
+                <ul role="list" class="-mb-8">
+                    {% for item in recent_activity %}
+                    <li>
+                        <div class="relative pb-8">
+                            {% if not forloop.last %}
+                            <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200" aria-hidden="true"></span>
+                            {% endif %}
+                            <div class="relative flex space-x-3">
+                                <div>
+                                    <span class="h-8 w-8 rounded-full bg-{{ item.color }}-100 flex items-center justify-center ring-8 ring-white">
+                                        <svg class="h-5 w-5 text-{{ item.color }}-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            {{ item.icon|safe }}
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                    <div>
+                                        <p class="text-sm text-slate-500">{{ item.description }}</p>
+                                    </div>
+                                    <div class="text-right text-sm whitespace-nowrap text-slate-500">
+                                        <time datetime="{{ item.timestamp|date:"Y-m-d" }}">{{ item.timestamp|timesince }} ago</time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="text-center py-4">
+                        <p class="text-sm text-slate-500">No recent activity.</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{{ visitors_series_180d|json_script:"visitors-180" }}
+<script>
+  (function() {
+    const raw = JSON.parse(document.getElementById('visitors-180').textContent || '[]');
+    const ctx = document.getElementById('visitorsChart');
+    if (!ctx) return;
+    const g = ctx.getContext('2d');
+    const gradient = g.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, 'rgba(99,102,241,0.35)');
+    gradient.addColorStop(1, 'rgba(99,102,241,0.02)');
+
+    const buildSlice = (days) => {
+      const data = raw.slice(-days);
+      return {
+        labels: data.map(d => d.date.slice(5)),
+        values: data.map(d => d.value)
+      };
+    };
+
+    let { labels, values } = buildSlice(14);
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: [{
+        label: 'Visitors', data: values, fill: true, backgroundColor: gradient,
+        borderColor: '#6366f1', borderWidth: 2, pointRadius: 2, tension: 0.35
+      }]},
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,0.2)' } }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } }
+      }
+    });
+
+    // Range toggles
+    document.querySelectorAll('[data-range]')?.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const days = parseInt(btn.getAttribute('data-range')) || 14;
+        const slice = buildSlice(days);
+        chart.data.labels = slice.labels;
+        chart.data.datasets[0].data = slice.values;
+        chart.update();
+      });
+    });
+
+    // Sparklines
+    const spark = (id, days, color) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const sctx = el.getContext('2d');
+      new Chart(sctx, {
+        type: 'line',
+        data: { labels: raw.slice(-days).map(d => ''), datasets: [{
+          data: raw.slice(-days).map(d => d.value),
+          borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.35
+        }]},
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+      });
+    };
+    spark('spark-today', 7, '#ffffff');
+    spark('spark-7d', 14, '#ffffff');
+    spark('spark-30d', 30, '#ffffff');
+    spark('spark-365d', 90, '#ffffff');
+  })();
+  </script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Testimonials{% endblock %}
+{% block page_title %}Testimonials{% endblock %}
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+  <form method="get" class="flex items-center space-x-3">
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search testimonials..." class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+    <button class="btn-secondary">Search</button>
+  </form>
+  <a href="{% url 'dashboard:testimonial_create' %}" class="btn-primary">
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/></svg>
+    New Testimonial
+  </a>
+</div>
+
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Client</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Company</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Rating</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Featured</th>
+        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Active</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200">
+      {% for t in testimonials %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3">
+          <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 mr-3">
+              {% if t.image %}
+                <img src="{{ t.image.url }}" class="w-full h-full object-cover" alt="{{ t.name }}">
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=60" class="w-full h-full object-cover" alt="Client">
+              {% endif %}
+            </div>
+            <div>
+              <div class="font-semibold text-slate-800">{{ t.name }}</div>
+              <div class="text-sm text-slate-500">{{ t.position }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 py-3 text-slate-700">{{ t.company|default:'-' }}</td>
+        <td class="px-4 py-3">
+          <div class="flex items-center text-yellow-500">
+            {% for i in "12345" %}
+              <svg class="w-4 h-4 mr-0.5 {% if forloop.counter <= t.rating %}text-yellow-400{% else %}text-slate-300{% endif %}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.785.57-1.84-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            {% endfor %}
+          </div>
+        </td>
+        <td class="px-4 py-3">{% if t.is_featured %}<span class="text-green-600 font-medium">Yes</span>{% else %}<span class="text-slate-500">No</span>{% endif %}</td>
+        <td class="px-4 py-3">{% if t.is_active %}<span class="text-green-600 font-medium">Yes</span>{% else %}<span class="text-slate-500">No</span>{% endif %}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'dashboard:testimonial_edit' t.pk %}" class="text-indigo-600 hover:text-indigo-800 font-medium mr-4">Edit</a>
+          <a href="{% url 'dashboard:testimonial_delete' t.pk %}" class="text-rose-600 hover:text-rose-700 font-medium">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td class="px-4 py-6 text-center text-slate-500" colspan="6">No testimonials yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div class="flex justify-between items-center mt-6 text-sm">
+  <div class="text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+  <div class="space-x-2">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="btn-secondary">Previous</a>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="btn-secondary">Next</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

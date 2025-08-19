@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Apply for {{ job.title }} | Careers | {{ site_settings.site_name }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Application Header -->
+<section class="relative py-16 lg:py-20 bg-gradient-to-br from-indigo-900 via-blue-800 to-slate-900">
+    <div class="container-custom">
+        <div class="max-w-4xl mx-auto text-white text-center">
+            <!-- Breadcrumb -->
+            <nav class="mb-8 animate-fade-in-up">
+                <ol class="flex items-center justify-center space-x-2 text-primary-200">
+                    <li><a href="{% url 'core:home' %}" class="hover:text-white transition-colors duration-200">Home</a></li>
+                    <li><span class="mx-2">/</span></li>
+                    <li><a href="{% url 'careers:job_list' %}" class="hover:text-white transition-colors duration-200">Careers</a></li>
+                    <li><span class="mx-2">/</span></li>
+                    <li><a href="{% url 'careers:job_detail' slug=job.slug %}" class="hover:text-white transition-colors duration-200">{{ job.title }}</a></li>
+                    <li><span class="mx-2">/</span></li>
+                    <li class="text-white">Apply</li>
+                </ol>
+            </nav>
+            
+            <h1 class="text-4xl lg:text-5xl font-heading font-bold mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+                Apply for <span class="text-gradient-hero">{{ job.title }}</span>
+            </h1>
+            <p class="text-xl text-primary-100 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+                {{ job.department.name }} • {{ job.location }} • {{ job.get_job_type_display }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Application Form -->
+<section class="section bg-white">
+    <div class="container-custom">
+        <div class="max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Form -->
+                <div class="lg:col-span-2">
+                    <div class="card animate-on-scroll">
+                        <div class="p-8">
+                            <h2 class="text-2xl font-heading font-bold text-neutral-800 mb-6">Application Form</h2>
+                            
+                            <form method="post" enctype="multipart/form-data" data-validate class="apply-form space-y-6">
+                                {% csrf_token %}
+                                {% if form.non_field_errors %}
+                                <div class="rounded-xl border border-red-200 bg-red-50 text-red-700 p-4">
+                                    <ul class="list-disc list-inside">
+                                        {% for err in form.non_field_errors %}
+                                        <li>{{ err }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Personal Information -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-neutral-800 mb-4">Personal Information</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="form-label">{{ form.first_name.label }}</label>
+                                            {{ form.first_name }}
+                                            {% if form.first_name.errors %}<p class="field-error">{{ form.first_name.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.last_name.label }}</label>
+                                            {{ form.last_name }}
+                                            {% if form.last_name.errors %}<p class="field-error">{{ form.last_name.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.email.label }}</label>
+                                            {{ form.email }}
+                                            {% if form.email.errors %}<p class="field-error">{{ form.email.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.phone.label }}</label>
+                                            {{ form.phone }}
+                                            {% if form.phone.errors %}<p class="field-error">{{ form.phone.errors.0 }}</p>{% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <label class="form-label">{{ form.address.label }}</label>
+                                        {{ form.address }}
+                                        {% if form.address.errors %}<p class="field-error">{{ form.address.errors.0 }}</p>{% endif %}
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                        <div>
+                                            <label class="form-label">{{ form.city.label }}</label>
+                                            {{ form.city }}
+                                            {% if form.city.errors %}<p class="field-error">{{ form.city.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.country.label }}</label>
+                                            {{ form.country }}
+                                            {% if form.country.errors %}<p class="field-error">{{ form.country.errors.0 }}</p>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Professional Information -->
+                                <div class="pt-6 border-t border-neutral-200">
+                                    <h3 class="text-lg font-semibold text-neutral-800 mb-4">Professional Information</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="form-label">{{ form.current_position.label }}</label>
+                                            {{ form.current_position }}
+                                            {% if form.current_position.errors %}<p class="field-error">{{ form.current_position.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.current_company.label }}</label>
+                                            {{ form.current_company }}
+                                            {% if form.current_company.errors %}<p class="field-error">{{ form.current_company.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.years_of_experience.label }}</label>
+                                            {{ form.years_of_experience }}
+                                            {% if form.years_of_experience.errors %}<p class="field-error">{{ form.years_of_experience.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">{{ form.expected_salary.label }}</label>
+                                            {{ form.expected_salary }}
+                                            {% if form.expected_salary.errors %}<p class="field-error">{{ form.expected_salary.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label class="form-label">{{ form.availability_date.label }}</label>
+                                            {{ form.availability_date }}
+                                            {% if form.availability_date.errors %}<p class="field-error">{{ form.availability_date.errors.0 }}</p>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Application Materials -->
+                                <div class="pt-6 border-t border-neutral-200">
+                                    <h3 class="text-lg font-semibold text-neutral-800 mb-4">Application Materials</h3>
+                                    <div class="space-y-6">
+                                        <div>
+                                            <label class="form-label">{{ form.cv_file.label }} <span class="text-red-500">*</span></label>
+                                            {{ form.cv_file }}
+                                            <p class="text-sm text-neutral-500 mt-1">Upload your CV/Resume (PDF, DOC, or DOCX format, max 5MB)</p>
+                                            {% if form.cv_file.errors %}<p class="field-error">{{ form.cv_file.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="form-label">{{ form.cover_letter_file.label }}</label>
+                                            {{ form.cover_letter_file }}
+                                            <p class="text-sm text-neutral-500 mt-1">Upload your cover letter (PDF, DOC, or DOCX format, max 5MB)</p>
+                                            {% if form.cover_letter_file.errors %}<p class="field-error">{{ form.cover_letter_file.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="form-label">{{ form.cover_letter_text.label }}</label>
+                                            {{ form.cover_letter_text }}
+                                            <p class="text-sm text-neutral-500 mt-1">Or write your cover letter here if you didn't upload a file</p>
+                                            {% if form.cover_letter_text.errors %}<p class="field-error">{{ form.cover_letter_text.errors.0 }}</p>{% endif %}
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="form-label">{{ form.portfolio_url.label }}</label>
+                                            {{ form.portfolio_url }}
+                                            <p class="text-sm text-neutral-500 mt-1">Link to your portfolio, LinkedIn profile, or personal website</p>
+                                            {% if form.portfolio_url.errors %}<p class="field-error">{{ form.portfolio_url.errors.0 }}</p>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Information -->
+                                <div class="pt-6 border-t border-neutral-200">
+                                    <h3 class="text-lg font-semibold text-neutral-800 mb-4">Additional Information</h3>
+                                    <div>
+                                        <label class="form-label">{{ form.additional_info.label }}</label>
+                                        {{ form.additional_info }}
+                                        <p class="text-sm text-neutral-500 mt-1">Any additional information you would like to share</p>
+                                        {% if form.additional_info.errors %}<p class="field-error">{{ form.additional_info.errors.0 }}</p>{% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Submit Button -->
+                                <div class="pt-6 border-t border-neutral-200">
+                                    <button type="submit" class="btn-primary btn-lg w-full">
+                                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        Submit Application
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="space-y-8">
+                    <!-- Job Summary -->
+                    <div class="card animate-on-scroll">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-neutral-800 mb-4">Position Summary</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Position</dt>
+                                    <dd class="text-neutral-800 font-medium">{{ job.title }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Department</dt>
+                                    <dd class="text-neutral-800">{{ job.department.name }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Location</dt>
+                                    <dd class="text-neutral-800">{{ job.location }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Job Type</dt>
+                                    <dd class="text-neutral-800">{{ job.get_job_type_display }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Salary Range</dt>
+                                    <dd class="text-neutral-800">{{ job.salary_range }}</dd>
+                                </div>
+                                {% if job.application_deadline %}
+                                <div>
+                                    <dt class="text-sm font-medium text-neutral-500">Application Deadline</dt>
+                                    <dd class="text-neutral-800">{{ job.application_deadline|date:"M d, Y" }}</dd>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Application Tips -->
+                    <div class="card animate-on-scroll">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-neutral-800 mb-4">Application Tips</h3>
+                            <ul class="space-y-3 text-sm text-neutral-600">
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-4 h-4 text-primary-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Ensure your CV is up-to-date and relevant to the position</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-4 h-4 text-primary-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Write a compelling cover letter that highlights your fit for the role</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-4 h-4 text-primary-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Double-check all information before submitting</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-4 h-4 text-primary-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Include links to your portfolio or professional profiles</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact -->
+                    <div class="card animate-on-scroll">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-neutral-800 mb-4">Questions?</h3>
+                            <p class="text-neutral-600 mb-4">
+                                If you have any questions about this position or the application process, feel free to contact us.
+                            </p>
+                            <a href="{% url 'core:contact' %}" class="btn-outline w-full">
+                                Contact HR
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // File upload validation and preview
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    // Check file size (5MB limit)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Check file type
+                    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Please upload a PDF, DOC, or DOCX file');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Show file name
+                    const fileName = file.name;
+                    const label = this.parentNode.querySelector('label');
+                    if (label) {
+                        label.innerHTML = label.innerHTML.split(' <span')[0] + ` <span class="text-green-600">(${fileName})</span>`;
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

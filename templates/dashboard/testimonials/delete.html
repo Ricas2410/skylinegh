@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete Testimonial{% endblock %}
+{% block page_title %}Delete Testimonial{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white border border-slate-200 rounded-2xl p-6">
+  <h2 class="text-xl font-semibold text-slate-800 mb-3">Are you sure?</h2>
+  <p class="text-slate-600 mb-6">This will permanently delete the testimonial from <strong>{{ object.name }}</strong>. This action cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="flex items-center space-x-3">
+      <button type="submit" class="btn-primary bg-rose-600 hover:bg-rose-700">Delete</button>
+      <a href="{% url 'dashboard:testimonial_list' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
