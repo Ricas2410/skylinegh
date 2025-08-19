@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 from projects.models import Project, ProjectImage
 from services.models import Service, ServiceCategory, ServicePageImage
-from core.models import ContactInquiry, SiteSettings, Testimonial
+from core.models import ContactInquiry, SiteSettings, Testimonial, HomepageCarouselImage
 from .models import ActivityLog, SystemMetrics
 from careers.models import JobPosition, JobApplication
 from blog.models import BlogPost
@@ -1100,3 +1100,113 @@ class ActivityLogListView(LoginRequiredMixin, ListView):
                 Q(message__icontains=search)
             )
         return qs.order_by('-created_at')
+
+
+# ==========================
+# Homepage Carousel Image Management
+# ==========================
+class HomepageCarouselListView(LoginRequiredMixin, ListView):
+    """List all homepage carousel images"""
+    model = HomepageCarouselImage
+    template_name = 'dashboard/homepage_carousel/list.html'
+    context_object_name = 'images'
+    login_url = '/my-admin/login/'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return HomepageCarouselImage.objects.select_related('site_settings').order_by('order', '-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_images'] = HomepageCarouselImage.objects.count()
+        context['active_images'] = HomepageCarouselImage.objects.filter(is_active=True).count()
+        return context
+
+
+class HomepageCarouselCreateView(LoginRequiredMixin, CreateView):
+    """Create new homepage carousel image"""
+    model = HomepageCarouselImage
+    template_name = 'dashboard/homepage_carousel/form.html'
+    fields = ['image', 'caption', 'order', 'is_active']
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:homepage_carousel_list')
+
+    def form_valid(self, form):
+        # Get or create site settings
+        site_settings = SiteSettings.objects.first()
+        if not site_settings:
+            site_settings = SiteSettings.objects.create()
+        form.instance.site_settings = site_settings
+
+        messages.success(self.request, 'Homepage carousel image added successfully!')
+        response = super().form_valid(form)
+        try:
+            ActivityLog.objects.create(
+                user=self.request.user,
+                action='create',
+                model_name='HomepageCarouselImage',
+                object_id=str(self.object.pk),
+                message=f"Added homepage carousel image #{self.object.pk}"
+            )
+        except Exception:
+            pass
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Homepage Carousel Image'
+        return context
+
+
+class HomepageCarouselUpdateView(LoginRequiredMixin, UpdateView):
+    """Update existing homepage carousel image"""
+    model = HomepageCarouselImage
+    template_name = 'dashboard/homepage_carousel/form.html'
+    fields = ['image', 'caption', 'order', 'is_active']
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:homepage_carousel_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Homepage carousel image updated successfully!')
+        response = super().form_valid(form)
+        try:
+            ActivityLog.objects.create(
+                user=self.request.user,
+                action='update',
+                model_name='HomepageCarouselImage',
+                object_id=str(self.object.pk),
+                message=f"Updated homepage carousel image #{self.object.pk}"
+            )
+        except Exception:
+            pass
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Homepage Carousel Image'
+        return context
+
+
+class HomepageCarouselDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete homepage carousel image"""
+    model = HomepageCarouselImage
+    template_name = 'dashboard/homepage_carousel/confirm_delete.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:homepage_carousel_list')
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        pk = obj.pk
+        messages.success(request, 'Homepage carousel image deleted successfully!')
+        response = super().delete(request, *args, **kwargs)
+        try:
+            ActivityLog.objects.create(
+                user=request.user,
+                action='delete',
+                model_name='HomepageCarouselImage',
+                object_id=str(pk),
+                message=f"Deleted homepage carousel image #{pk}"
+            )
+        except Exception:
+            pass
+        return response

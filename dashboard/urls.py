@@ -49,6 +49,12 @@ urlpatterns = [
     path('blog/<int:pk>/edit/', views.BlogUpdateView.as_view(), name='blog_edit'),
     path('blog/<int:pk>/delete/', views.BlogDeleteView.as_view(), name='blog_delete'),
 
+    # Homepage Carousel Images
+    path('homepage-carousel/', views.HomepageCarouselListView.as_view(), name='homepage_carousel_list'),
+    path('homepage-carousel/create/', views.HomepageCarouselCreateView.as_view(), name='homepage_carousel_create'),
+    path('homepage-carousel/<int:pk>/edit/', views.HomepageCarouselUpdateView.as_view(), name='homepage_carousel_edit'),
+    path('homepage-carousel/<int:pk>/delete/', views.HomepageCarouselDeleteView.as_view(), name='homepage_carousel_delete'),
+
     # Analytics & Settings
     path('analytics/', views.AnalyticsView.as_view(), name='analytics'),
     path('settings/', views.SettingsView.as_view(), name='settings'),

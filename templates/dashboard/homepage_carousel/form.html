@@ -1,0 +1,144 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{{ title }}</h1>
+        <p class="text-gray-600">Upload and manage images for the homepage carousel section.</p>
+    </div>
+    <a href="{% url 'dashboard:homepage_carousel_list' %}" class="btn-secondary">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Carousel Images
+    </a>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Image Upload -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Carousel Image *</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                {% if form.image.value %}
+                    <img src="{{ form.image.value.url }}" alt="Current Image" class="max-h-48 mx-auto mb-4 rounded-lg border border-gray-200">
+                    <p class="text-sm text-gray-600 mb-4">Current Image</p>
+                {% else %}
+                    <div class="text-gray-400 mb-4">
+                        <svg class="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Upload a high-quality image for the homepage carousel</p>
+                {% endif %}
+                
+                <input type="file" name="{{ form.image.name }}" accept="image/*" class="hidden" id="id_{{ form.image.name }}" onchange="previewImage(this, 'preview_{{ form.image.name }}')">
+                <label for="id_{{ form.image.name }}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    Choose Image
+                </label>
+                
+                <div class="mt-4 text-xs text-gray-500">
+                    <p>Recommended: 1600x900px or larger, JPG/PNG format</p>
+                    <p>Maximum file size: 10MB</p>
+                </div>
+            </div>
+            {% for error in form.image.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Caption -->
+        <div>
+            <label for="{{ form.caption.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Caption</label>
+            <input type="text" 
+                   name="{{ form.caption.name }}" 
+                   id="{{ form.caption.id_for_label }}"
+                   value="{{ form.caption.value|default:'' }}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                   placeholder="Optional caption for the image">
+            <p class="mt-1 text-sm text-gray-500">Optional caption that will be displayed over the image</p>
+            {% for error in form.caption.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Order -->
+        <div>
+            <label for="{{ form.order.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
+            <input type="number" 
+                   name="{{ form.order.name }}" 
+                   id="{{ form.order.id_for_label }}"
+                   value="{{ form.order.value|default:'0' }}"
+                   min="0"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
+            <p class="mt-1 text-sm text-gray-500">Lower numbers appear first in the carousel (0 = first)</p>
+            {% for error in form.order.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Active Status -->
+        <div class="flex items-center">
+            <input type="checkbox" 
+                   name="{{ form.is_active.name }}" 
+                   id="{{ form.is_active.id_for_label }}"
+                   {% if form.is_active.value %}checked{% endif %}
+                   class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+            <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-900">
+                Active
+            </label>
+            <p class="ml-2 text-sm text-gray-500">Only active images will be displayed in the carousel</p>
+            {% for error in form.is_active.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
+            <a href="{% url 'dashboard:homepage_carousel_list' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">
+                {% if object %}
+                    Update Image
+                {% else %}
+                    Add Image
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+function previewImage(input, previewId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const container = input.closest('.border-dashed');
+            const existingImg = container.querySelector('img');
+            if (existingImg) {
+                existingImg.src = e.target.result;
+            } else {
+                const svg = container.querySelector('svg');
+                const p = container.querySelector('p');
+                if (svg) svg.style.display = 'none';
+                if (p) p.style.display = 'none';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'max-h-48 mx-auto mb-4 rounded-lg border border-gray-200';
+                img.alt = 'Preview';
+                container.insertBefore(img, container.firstChild);
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}
