@@ -75,6 +75,8 @@
                 </svg>
                 <span class="text-xs font-medium">WhatsApp</span>
             </a>
+        </div>
+        <div class="flex items-center space-x-3">
             <!-- Blog Link -->
             <a href="{% url 'blog:post_list' %}" class="flex items-center space-x-1 hover:text-indigo-200 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -82,9 +84,6 @@
                 </svg>
                 <span class="text-xs">Blog</span>
             </a>
-            </a>
-        </div>
-        <div class="flex items-center space-x-2">
             <!-- Social Media Icons -->
             <a href="{{ site_settings.linkedin_url|default:'#' }}" target="_blank" rel="noopener" class="hover:text-indigo-200 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
