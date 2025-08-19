@@ -21,33 +21,14 @@ DEBUG = False
 # Allow hosts; default to '*' so internal IP health checks pass. Override via env if needed.
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
-# Database configuration using environment variable
-DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,  # 10 minutes connection pooling
-            conn_health_checks=True,
-        )
-    }
-else:
-    # Fallback to individual environment variables
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-            'NAME': os.getenv('DB_NAME', 'skylinegh'),
-            'USER': os.getenv('DB_USER', ''),
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-            'OPTIONS': {
-                'connect_timeout': 10,
-            },
-            'CONN_MAX_AGE': 600,
-            'CONN_HEALTH_CHECKS': True,
-        }
-    }
+# Database configuration for Neon PostgreSQL with optimizations
+DATABASES = {
+    'default': dj_database_url.parse(
+        'postgresql://neondb_owner:npg_ezEGqQuRU1w3@ep-autumn-rice-a2j7dw0g-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+        conn_max_age=600,  # 10 minutes connection pooling
+        conn_health_checks=True,
+    )
+}
 
 # Database connection optimizations for cost savings
 DATABASES['default'].update({
