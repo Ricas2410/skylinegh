@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCounterAnimations();
     initParallaxEffects();
     initLoadingStates();
+    initImageLazyLoading();
 });
 
 // Mobile Menu Toggle
@@ -108,21 +109,23 @@ function hideDropdown(button, menu) {
     menu.classList.add('opacity-0', 'invisible', 'translate-y-4', 'scale-95');
 }
 
-// Scroll Animations
+// Scroll Animations (Optimized)
 function initScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
+
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate');
+                // Stop observing once animated to improve performance
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
-    
+
     // Observe all elements with animate-on-scroll class
     document.querySelectorAll('.animate-on-scroll').forEach(el => {
         observer.observe(el);
@@ -308,19 +311,21 @@ function animateCounter(element) {
     }, 16);
 }
 
-// Parallax Effects
+// Parallax Effects (Optimized with throttling)
 function initParallaxEffects() {
     const parallaxElements = document.querySelectorAll('[data-parallax]');
-    
+
     if (parallaxElements.length > 0) {
-        window.addEventListener('scroll', function() {
+        const handleScroll = throttle(() => {
             const scrolled = window.pageYOffset;
-            
+
             parallaxElements.forEach(element => {
                 const rate = scrolled * -0.5;
                 element.style.transform = `translateY(${rate}px)`;
             });
-        });
+        }, 16); // ~60fps
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
     }
 }
 
@@ -367,6 +372,30 @@ function throttle(func, limit) {
             inThrottle = true;
             setTimeout(() => inThrottle = false, limit);
         }
+    }
+}
+
+// Image Lazy Loading Optimization
+function initImageLazyLoading() {
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.addEventListener('load', () => {
+                        img.classList.add('loaded');
+                    });
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        lazyImages.forEach(img => imageObserver.observe(img));
+    } else {
+        // Fallback for browsers without IntersectionObserver
+        lazyImages.forEach(img => img.classList.add('loaded'));
     }
 }
 
