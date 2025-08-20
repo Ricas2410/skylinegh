@@ -105,8 +105,11 @@
             <!-- Text moved from hero + Desktop Features under it -->
             <div>
                 <h3 class="text-2xl lg:text-3xl font-extrabold text-slate-800 mb-4">About Skyline Ghana</h3>
-                <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                <p class="text-lg text-slate-600 leading-relaxed mb-4">
                     {{ site_settings.hero_subtitle|default:"Skyline Ghana Constructions is a leading name in construction and design, transforming visions into reality with precision, innovation, and a commitment to quality." }}
+                </p>
+                <p class="text-base text-slate-600 leading-relaxed mb-6">
+                    With over a decade of experience in Ghana's construction industry, we have successfully completed hundreds of projects ranging from luxury residential homes to large-scale commercial developments. Our team of certified engineers, architects, and skilled craftsmen work together to deliver exceptional results that exceed client expectations. We pride ourselves on using cutting-edge construction techniques, sustainable building practices, and premium materials sourced from trusted suppliers worldwide.
                 </p>
 
                 <!-- Desktop Features: compact cards sitting under About text -->
@@ -157,6 +160,7 @@
                                     <img src="{{ carousel_image.image.url }}"
                                          alt="{% if carousel_image.caption %}{{ carousel_image.caption }}{% else %}Skyline Ghana visual {{ forloop.counter }}{% endif %}"
                                          class="w-full h-full object-cover"
+                                         loading="lazy"
                                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
                                     {% if carousel_image.caption %}
                                         <div class="absolute bottom-4 left-4 right-4">
@@ -313,13 +317,13 @@
                     </script>
                 {% else %}
                     {% if site_settings.about_hero_image %}
-                        <img src="{{ site_settings.about_hero_image.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]">
+                        <img src="{{ site_settings.about_hero_image.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]" loading="lazy">
                     {% elif site_settings.hero_card_image %}
-                        <img src="{{ site_settings.hero_card_image.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]">
+                        <img src="{{ site_settings.hero_card_image.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]" loading="lazy">
                     {% elif site_settings.hero_background %}
-                        <img src="{{ site_settings.hero_background.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]">
+                        <img src="{{ site_settings.hero_background.url }}" alt="Skyline Ghana Visual" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]" loading="lazy">
                     {% else %}
-                        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Construction" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]">
+                        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Construction" class="w-full rounded-3xl shadow-2xl object-cover md:h-[360px] lg:h-[420px]" loading="lazy">
                     {% endif %}
                 {% endif %}
                 {% endwith %}
@@ -489,8 +493,11 @@
                     Construction Solutions
                 </span>
             </h2>
-            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mb-4">
                 From concept to completion, we deliver end-to-end construction services that exceed expectations.
+            </p>
+            <p class="text-base text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                Our comprehensive approach combines innovative design, expert project management, and superior craftsmanship to bring your construction dreams to life. Whether you're planning a residential home, commercial building, or industrial facility, our experienced team provides personalized solutions tailored to your specific needs, budget, and timeline. We handle everything from initial architectural design and engineering to final finishing touches, ensuring seamless project delivery with the highest quality standards.
             </p>
         </div>
 
@@ -501,11 +508,13 @@
                     {% if site_settings.featured_service_1_image %}
                         <img src="{{ site_settings.featured_service_1_image.url }}"
                              alt="Construction Services"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% else %}
                         <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                              alt="Construction site"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% endif %}
                 </div>
                 <div class="relative z-10 p-4 sm:p-6">
@@ -534,11 +543,13 @@
                     {% if site_settings.featured_service_2_image %}
                         <img src="{{ site_settings.featured_service_2_image.url }}"
                              alt="Architectural Design Services"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% else %}
                         <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                              alt="Architectural design"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% endif %}
                 </div>
                 <div class="relative z-10 p-4 sm:p-6">
@@ -567,11 +578,13 @@
                     {% if site_settings.featured_service_3_image %}
                         <img src="{{ site_settings.featured_service_3_image.url }}"
                              alt="Construction Materials Supply"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% else %}
                         <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                              alt="Construction materials"
-                             class="w-full h-full object-cover opacity-20">
+                             class="w-full h-full object-cover opacity-20"
+                             loading="lazy">
                     {% endif %}
                 </div>
                 <div class="relative z-10 p-4 sm:p-6">
@@ -724,11 +737,13 @@
                 {% if site_settings.why_choose_us_image %}
                     <img src="{{ site_settings.why_choose_us_image.url }}"
                          alt="Why Choose Skyline Ghana"
-                         class="rounded-xl shadow-xl">
+                         class="rounded-xl shadow-xl"
+                         loading="lazy">
                 {% else %}
                     <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
                          alt="Professional construction team"
-                         class="rounded-xl shadow-xl">
+                         class="rounded-xl shadow-xl"
+                         loading="lazy">
                 {% endif %}
             </div>
 
@@ -737,9 +752,12 @@
                 <h2 class="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
                     Join the Skyline Team
                 </h2>
-                <p class="text-lg text-indigo-100 mb-6 leading-relaxed">
+                <p class="text-lg text-indigo-100 mb-4 leading-relaxed">
                     Take the next step in your career and help us build a better world.
                     From project site positions to office-based roles, we have opportunities in engineering, procurement, construction and other professional services.
+                </p>
+                <p class="text-base text-indigo-200 mb-6 leading-relaxed">
+                    Join a dynamic team that values innovation, safety, and professional growth. We offer competitive compensation packages, comprehensive benefits, ongoing training programs, and the opportunity to work on exciting projects that shape Ghana's infrastructure. Whether you're a recent graduate or an experienced professional, we provide a supportive environment where you can develop your skills and advance your career in the construction industry.
                 </p>
                 <a href="{% url 'careers:job_list' %}" class="inline-flex items-center px-6 py-3 bg-white text-indigo-700 rounded-xl font-semibold hover:bg-slate-100 transition-all duration-300 transform hover:scale-105">
                     See Our Latest Opportunities
@@ -752,6 +770,60 @@
     </div>
 </section>
 
+<!-- Company Values & Certifications Section -->
+<section class="py-16 bg-gradient-to-br from-slate-50 to-blue-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">Why Choose Skyline Ghana</h2>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                Our commitment to excellence, safety, and sustainability sets us apart in Ghana's construction industry. We combine traditional craftsmanship with modern technology to deliver outstanding results.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">ISO Certified</h3>
+                <p class="text-slate-600 text-sm">Quality management systems certified to international standards ensuring consistent project delivery and client satisfaction.</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Safety First</h3>
+                <p class="text-slate-600 text-sm">Zero-accident workplace policy with comprehensive safety training, protective equipment, and strict adherence to occupational health standards.</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">10+ Years</h3>
+                <p class="text-slate-600 text-sm">Over a decade of construction excellence in Ghana with hundreds of successful projects and satisfied clients across all sectors.</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Green Building</h3>
+                <p class="text-slate-600 text-sm">Sustainable construction practices using eco-friendly materials, energy-efficient designs, and waste reduction strategies for environmental protection.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Business Segments Section -->
 <section class="py-20 bg-slate-50">
     <div class="container mx-auto px-4">
@@ -759,6 +831,9 @@
             <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
                 Business Segments
             </h2>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                We serve diverse sectors across Ghana's construction industry, delivering specialized solutions for residential, commercial, industrial, and infrastructure projects. Our expertise spans multiple market segments, ensuring we can meet the unique requirements of any construction challenge.
+            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -770,7 +845,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800 mb-4">Residential Construction</h3>
-                <p class="text-slate-600 leading-relaxed">Premium residential projects from luxury homes to affordable housing developments.</p>
+                <p class="text-slate-600 leading-relaxed">Premium residential projects from luxury homes to affordable housing developments. We specialize in custom home building, residential renovations, apartment complexes, and gated community developments. Our residential construction services include architectural design, structural engineering, interior finishing, landscaping, and smart home technology integration.</p>
             </div>
 
             <!-- Segment 2 -->
@@ -781,7 +856,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800 mb-4">Commercial Buildings</h3>
-                <p class="text-slate-600 leading-relaxed">Office complexes, retail centers, and mixed-use developments across Ghana.</p>
+                <p class="text-slate-600 leading-relaxed">Office complexes, retail centers, and mixed-use developments across Ghana. Our commercial construction expertise includes corporate headquarters, shopping malls, hotels, restaurants, banks, schools, hospitals, and entertainment facilities. We understand the unique requirements of commercial spaces and deliver projects that enhance business operations while meeting all regulatory standards.</p>
             </div>
 
             <!-- Segment 3 -->
@@ -792,7 +867,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800 mb-4">Industrial Projects</h3>
-                <p class="text-slate-600 leading-relaxed">Manufacturing facilities, warehouses, and specialized industrial infrastructure.</p>
+                <p class="text-slate-600 leading-relaxed">Manufacturing facilities, warehouses, and specialized industrial infrastructure. We construct factories, production plants, distribution centers, cold storage facilities, and processing plants. Our industrial construction services include heavy machinery installation, specialized flooring systems, industrial electrical and plumbing, safety systems, and environmental compliance solutions.</p>
             </div>
 
             <!-- Segment 4 -->
@@ -803,7 +878,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800 mb-4">Infrastructure</h3>
-                <p class="text-slate-600 leading-relaxed">Roads, bridges, utilities, and public infrastructure development projects.</p>
+                <p class="text-slate-600 leading-relaxed">Roads, bridges, utilities, and public infrastructure development projects. We partner with government agencies and private organizations to build critical infrastructure including highways, bridges, water treatment plants, sewage systems, telecommunications infrastructure, and renewable energy facilities. Our infrastructure projects contribute to Ghana's economic development and improve quality of life for communities.</p>
             </div>
         </div>
     </div>
@@ -836,11 +911,11 @@
                 <div class="flex items-center mb-4">
                     <div class="w-14 h-14 rounded-full overflow-hidden mr-4 bg-slate-100">
                         {% if t.image %}
-                            <img src="{{ t.image.url }}" alt="{{ t.name }}" class="w-full h-full object-cover">
+                            <img src="{{ t.image.url }}" alt="{{ t.name }}" class="w-full h-full object-cover" loading="lazy">
                         {% elif site_settings.default_testimonial_image %}
-                            <img src="{{ site_settings.default_testimonial_image.url }}" alt="{{ t.name }}" class="w-full h-full object-cover">
+                            <img src="{{ site_settings.default_testimonial_image.url }}" alt="{{ t.name }}" class="w-full h-full object-cover" loading="lazy">
                         {% else %}
-                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=60" alt="Client" class="w-full h-full object-cover">
+                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=60" alt="Client" class="w-full h-full object-cover" loading="lazy">
                         {% endif %}
                     </div>
                     <div>

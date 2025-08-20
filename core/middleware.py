@@ -92,3 +92,31 @@ class WWWRedirectMiddleware:
 
         response = self.get_response(request)
         return response
+
+
+class CacheControlMiddleware:
+    """
+    Middleware to add cache control headers for better performance
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        # Add cache headers for static files
+        if request.path.startswith('/static/'):
+            # Cache static files for 1 year
+            response['Cache-Control'] = 'public, max-age=31536000, immutable'
+            response['Expires'] = 'Thu, 31 Dec 2025 23:59:59 GMT'
+        elif request.path.startswith('/media/'):
+            # Cache media files for 1 week
+            response['Cache-Control'] = 'public, max-age=604800'
+        elif request.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2')):
+            # Cache other assets for 1 month
+            response['Cache-Control'] = 'public, max-age=2592000'
+        else:
+            # Cache HTML pages for 1 hour
+            response['Cache-Control'] = 'public, max-age=3600'
+
+        return response

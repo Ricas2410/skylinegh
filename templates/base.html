@@ -26,6 +26,7 @@
 
     <!-- Google Console Verification -->
     <meta name="google-site-verification" content="ua6z9w9pJeYey9cv-7U39CZubul1T-xL8xyLklhUJoc" />
+    <meta name="msvalidate.01" content="8B4FD4FCE8272A08B9912766D9F1F9CA" />
 
     <!-- Structured Data -->
     {% block structured_data %}
@@ -36,29 +37,30 @@
         {% endif %}
     {% endblock %}
     
-    <!-- Favicon - Use admin uploaded favicon, fallback to logo -->
+    <!-- Favicon - Use Skyline Ghana official favicon -->
+    <link rel="icon" type="image/png" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
+    <link rel="shortcut icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
+    <link rel="apple-touch-icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
+
+    <!-- Fallback to admin uploaded favicon if needed -->
     {% if site_settings.favicon %}
-        <link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}">
-        <link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+        <link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}" sizes="any">
     {% elif site_settings.logo %}
-        <link rel="icon" type="image/x-icon" href="{{ site_settings.logo.url }}">
-        <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
-    {% else %}
-        <!-- Fallback to static favicon files if no admin uploads -->
-        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/x-icon" href="{{ site_settings.logo.url }}" sizes="any">
     {% endif %}
     <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
     
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Use a modern font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="{% static 'css/output.css' %}" as="style">
+    <link rel="preload" href="{% static 'js/main.js' %}" as="script">
+
+    <!-- Use a modern font from Google Fonts with optimized loading -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN for a responsive and modern design -->
     <script src="https://cdn.tailwindcss.com"></script>

@@ -21,12 +21,20 @@ def seo_meta(context, obj=None):
     DEFAULT_KEYWORDS = 'skylinegh, skyline GH, Skylink GH, Skylink, construction Ghana, building contractors Ghana, skyline construction, skyline Ghana, skyline construction company, construction company Accra, residential construction Ghana, commercial construction Ghana, building services Ghana, construction contractors, Ghana builders, construction projects Ghana, building renovation Ghana, property development Ghana, construction management Ghana, architectural services Ghana, civil engineering Ghana, building materials Ghana, construction consultancy Ghana, construction company near me, best construction company Ghana, reliable builders Ghana, quality construction services, affordable construction Ghana, modern construction techniques, sustainable building Ghana, green construction, project management Ghana'
 
     # Generate canonical URL (always use non-www version)
-    canonical_url = ''
+    canonical_url = 'https://skylinegh.com/'  # Default fallback
     if request:
-        canonical_url = request.build_absolute_uri()
-        # Ensure canonical URL uses non-www version
-        if '://www.' in canonical_url:
-            canonical_url = canonical_url.replace('://www.', '://')
+        try:
+            canonical_url = request.build_absolute_uri()
+            # Ensure canonical URL uses non-www version
+            if '://www.' in canonical_url:
+                canonical_url = canonical_url.replace('://www.', '://')
+            # For localhost development, use production URL
+            if 'localhost' in canonical_url or '127.0.0.1' in canonical_url:
+                path = request.get_full_path()
+                canonical_url = f'https://skylinegh.com{path}'
+        except Exception:
+            # Fallback if request processing fails
+            canonical_url = 'https://skylinegh.com/'
 
     meta_data = {
         'title': SITE_NAME,
