@@ -37,17 +37,40 @@
         {% endif %}
     {% endblock %}
     
-    <!-- Favicon - Use Skyline Ghana official favicon -->
-    <link rel="icon" type="image/png" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
-    <link rel="shortcut icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
-    <link rel="apple-touch-icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232">
+    <!-- Favicon with robust fallback system -->
+    <link rel="icon" type="image/png" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232" id="favicon-primary">
+    <link rel="shortcut icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232" id="favicon-shortcut">
+    <link rel="apple-touch-icon" href="https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232" id="favicon-apple">
 
-    <!-- Fallback to admin uploaded favicon if needed -->
+    <!-- Fallback favicons -->
     {% if site_settings.favicon %}
-        <link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}" sizes="any">
+        <link rel="alternate icon" type="image/x-icon" href="{{ site_settings.favicon.url }}" id="favicon-fallback">
     {% elif site_settings.logo %}
-        <link rel="icon" type="image/x-icon" href="{{ site_settings.logo.url }}" sizes="any">
+        <link rel="alternate icon" type="image/x-icon" href="{{ site_settings.logo.url }}" id="favicon-fallback">
+    {% else %}
+        <link rel="alternate icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}" id="favicon-fallback">
     {% endif %}
+
+    <!-- Favicon fallback script -->
+    <script>
+        (function() {
+            var primaryFavicon = 'https://ik.imagekit.io/edunox/skyline/images/7a194fc4-3275-47c7-80a1-0b99a283671a_sxq071xf-.png?updatedAt=1755423267232';
+            var fallbackFavicon = '{% if site_settings.favicon %}{{ site_settings.favicon.url }}{% elif site_settings.logo %}{{ site_settings.logo.url }}{% else %}{% static "images/favicon.ico" %}{% endif %}';
+
+            // Test if primary favicon is accessible
+            var img = new Image();
+            img.onload = function() {
+                // Primary favicon loaded successfully, no action needed
+            };
+            img.onerror = function() {
+                // Primary favicon failed to load, switch to fallback
+                document.getElementById('favicon-primary').href = fallbackFavicon;
+                document.getElementById('favicon-shortcut').href = fallbackFavicon;
+                document.getElementById('favicon-apple').href = fallbackFavicon;
+            };
+            img.src = primaryFavicon;
+        })();
+    </script>
     <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
     
     <!-- Preconnect for performance -->
