@@ -58,7 +58,7 @@ class ContactView(BaseContextMixin, FormView):
     """Contact page view"""
     template_name = 'core/contact.html'
     form_class = ContactForm
-    success_url = '/contact/'
+    success_url = '/contact/#contact-form'
 
     def form_valid(self, form):
         # Save the inquiry
@@ -79,8 +79,19 @@ class ContactView(BaseContextMixin, FormView):
         except Exception:
             pass
 
-        messages.success(self.request, 'Thank you for your message! We will get back to you soon.')
+        messages.success(
+            self.request,
+            f'Thank you for your message, {inquiry.name}! We have received your inquiry about "{inquiry.subject}" and will get back to you within 24 hours at {inquiry.email}.'
+        )
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        """Handle form validation errors"""
+        messages.error(
+            self.request,
+            'There was an error with your submission. Please check the form and try again.'
+        )
+        return super().form_invalid(form)
 
     def get_client_ip(self):
         """Get client IP address"""
