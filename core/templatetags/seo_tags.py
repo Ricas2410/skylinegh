@@ -12,6 +12,7 @@ def seo_meta(context, obj=None):
     Usage: {% seo_meta object %}
     """
     request = context.get('request')
+    site_settings = context.get('site_settings')
 
     # Code-based SEO settings - not editable via admin to prevent accidental changes
     SITE_NAME = "Skyline Ghana Constructions - Premier Building Contractors in Ghana"
@@ -72,12 +73,14 @@ def seo_meta(context, obj=None):
     return meta_data
 
 
-@register.simple_tag
-def structured_data(obj=None, obj_type='WebPage'):
+@register.simple_tag(takes_context=True)
+def structured_data(context, obj=None, obj_type='WebPage'):
     """
     Generate JSON-LD structured data
     Usage: {% structured_data object "Article" %}
     """
+    site_settings = context.get('site_settings')
+
     data = {
         "@context": "https://schema.org",
         "@type": obj_type,
@@ -90,18 +93,18 @@ def structured_data(obj=None, obj_type='WebPage'):
             "name": "Skyline Ghana Constructions",
             "alternateName": ["Skyline GH", "Skylink GH", "Skylink", "SkylineGH", "Skyline Ghana"],
             "url": "https://skylinegh.com",
-            "logo": "https://skylinegh.com/static/images/skyline-logo.png",
-            "image": "https://skylinegh.com/static/images/skyline-logo-og.png",
+            "logo": site_settings.logo.url if site_settings and hasattr(site_settings, 'logo') and site_settings.logo else "https://skylinegh.com/static/images/skyline-logo.png",
+            "image": site_settings.logo.url if site_settings and hasattr(site_settings, 'logo') and site_settings.logo else "https://skylinegh.com/static/images/skyline-logo-og.png",
             "description": "Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra and Ghana.",
             "slogan": "Building Dreams, Creating Futures",
             "foundingDate": "2015",
             "keywords": "skylinegh, skyline GH, Skylink GH, Skylink, construction Ghana, building contractors Ghana",
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "123 Independence Avenue",
-                "addressLocality": "East Legon",
-                "addressRegion": "Greater Accra",
-                "postalCode": "GA-123-4567",
+                "streetAddress": site_settings.address_line_1 if site_settings and hasattr(site_settings, 'address_line_1') and site_settings.address_line_1 else "123 Independence Avenue",
+                "addressLocality": site_settings.city if site_settings and hasattr(site_settings, 'city') and site_settings.city else "East Legon",
+                "addressRegion": site_settings.region if site_settings and hasattr(site_settings, 'region') and site_settings.region else "Greater Accra",
+                "postalCode": site_settings.postal_code if site_settings and hasattr(site_settings, 'postal_code') and site_settings.postal_code else "GA-123-4567",
                 "addressCountry": "GH"
             },
             "geo": {
@@ -111,9 +114,9 @@ def structured_data(obj=None, obj_type='WebPage'):
             },
             "contactPoint": [{
                 "@type": "ContactPoint",
-                "telephone": "+233-24-123-4567",
+                "telephone": site_settings.phone_primary if site_settings and hasattr(site_settings, 'phone_primary') and site_settings.phone_primary else "+233-24-123-4567",
                 "contactType": "customer service",
-                "email": "info@skylinegh.com",
+                "email": site_settings.email_primary if site_settings and hasattr(site_settings, 'email_primary') and site_settings.email_primary else "info@skylinegh.com",
                 "availableLanguage": ["English"],
                 "hoursAvailable": {
                     "@type": "OpeningHoursSpecification",
@@ -203,9 +206,16 @@ def structured_data(obj=None, obj_type='WebPage'):
                 ]
             },
             "sameAs": [
-                "https://www.facebook.com/skylineghana",
-                "https://www.linkedin.com/company/skyline-ghana",
-                "https://www.instagram.com/skylineghana"
+                url for url in [
+                    site_settings.facebook_url if site_settings and hasattr(site_settings, 'facebook_url') and site_settings.facebook_url else None,
+                    site_settings.twitter_url if site_settings and hasattr(site_settings, 'twitter_url') and site_settings.twitter_url else None,
+                    site_settings.instagram_url if site_settings and hasattr(site_settings, 'instagram_url') and site_settings.instagram_url else None,
+                    site_settings.linkedin_url if site_settings and hasattr(site_settings, 'linkedin_url') and site_settings.linkedin_url else None,
+                    # Fallback URLs if no admin settings
+                    "https://www.facebook.com/skylineghana" if not (site_settings and hasattr(site_settings, 'facebook_url') and site_settings.facebook_url) else None,
+                    "https://www.linkedin.com/company/skyline-ghana" if not (site_settings and hasattr(site_settings, 'linkedin_url') and site_settings.linkedin_url) else None,
+                    "https://www.instagram.com/skylineghana" if not (site_settings and hasattr(site_settings, 'instagram_url') and site_settings.instagram_url) else None,
+                ] if url is not None
             ],
             "serviceArea": {
                 "@type": "Country",
