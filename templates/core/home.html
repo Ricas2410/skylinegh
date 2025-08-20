@@ -1,7 +1,42 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ site_settings.site_name }} - {{ site_settings.site_tagline }}{% endblock %}
+{% block title %}Skyline Ghana Constructions - Premier Building Contractors in Ghana | Construction Services Accra{% endblock %}
+
+{% block seo_meta %}
+    <title>Skyline Ghana Constructions - Premier Building Contractors in Ghana | Construction Services Accra</title>
+    <meta name="description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana. Get free quotes for your construction project today.">
+    <meta name="keywords" content="skylinegh, skyline ghana, construction company ghana, building contractors ghana, construction services accra, residential construction ghana, commercial construction ghana, industrial construction ghana, building contractors accra, construction company accra, ghana construction, building services ghana">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="author" content="Skyline Ghana Constructions">
+    <meta name="language" content="en">
+    <meta name="geo.region" content="GH">
+    <meta name="geo.placename" content="Accra, Ghana">
+    <meta name="geo.position" content="5.6037;-0.1870">
+    <meta name="ICBM" content="5.6037, -0.1870">
+    <link rel="canonical" href="https://skylinegh.com/">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Skyline Ghana Constructions - Premier Building Contractors in Ghana">
+    <meta property="og:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://skylinegh.com/">
+    <meta property="og:site_name" content="Skyline Ghana Constructions">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://skylinegh.com/static/images/skyline-logo-og.png">
+    <meta property="og:image:alt" content="Skyline Ghana Constructions Logo">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Skyline Ghana Constructions - Premier Building Contractors in Ghana">
+    <meta name="twitter:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana.">
+    <meta name="twitter:site" content="@SkylineGhana">
+    <meta name="twitter:creator" content="@SkylineGhana">
+    <meta name="twitter:image" content="https://skylinegh.com/static/images/skyline-logo-og.png">
+    <meta name="twitter:image:alt" content="Skyline Ghana Constructions Logo">
+{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -63,7 +98,7 @@
                 {% if site_settings.hero_title %}
                     {{ site_settings.hero_title|safe }}
                 {% else %}
-                    Building the Future,<br> Block by Block.
+                    Premier Construction Company in Ghana<br> Building the Future, Block by Block
                 {% endif %}
             </h1>
             <p class="hidden">

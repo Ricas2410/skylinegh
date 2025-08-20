@@ -7,11 +7,26 @@ from services.models import Service, ServiceCategory
 from blog.models import BlogPost
 from careers.models import JobPosition
 
-class StaticViewSitemap(Sitemap):
+
+class BaseSitemap(Sitemap):
+    """Base sitemap class with production URL enforcement"""
+    protocol = 'https'
+
+    def get_urls(self, site=None, **kwargs):
+        """Override to ensure production URLs"""
+        urls = super().get_urls(site=site, **kwargs)
+        for url in urls:
+            # Force production domain
+            if 'localhost' in url['location'] or '127.0.0.1' in url['location']:
+                url['location'] = url['location'].replace('http://localhost:8000', 'https://skylinegh.com')
+                url['location'] = url['location'].replace('https://localhost:8000', 'https://skylinegh.com')
+                url['location'] = url['location'].replace('http://127.0.0.1:8000', 'https://skylinegh.com')
+        return urls
+
+class StaticViewSitemap(BaseSitemap):
     """Sitemap for static pages"""
     priority = 0.9
     changefreq = 'weekly'
-    protocol = 'https'
 
     def items(self):
         return [
@@ -48,11 +63,10 @@ class StaticViewSitemap(Sitemap):
         }
         return priorities.get(item, 0.5)
 
-class ProjectSitemap(Sitemap):
+class ProjectSitemap(BaseSitemap):
     """Sitemap for project pages"""
     changefreq = 'monthly'
     priority = 0.8
-    protocol = 'https'
 
     def items(self):
         return Project.objects.filter(is_published=True).order_by('-updated_at')
@@ -67,11 +81,10 @@ class ProjectSitemap(Sitemap):
         # Featured projects get higher priority
         return 0.9 if getattr(obj, 'is_featured', False) else 0.8
 
-class ServiceSitemap(Sitemap):
+class ServiceSitemap(BaseSitemap):
     """Sitemap for service pages"""
     changefreq = 'monthly'
     priority = 0.9
-    protocol = 'https'
     
     def items(self):
         return Service.objects.filter(is_active=True)
@@ -82,11 +95,10 @@ class ServiceSitemap(Sitemap):
     def location(self, obj):
         return obj.get_absolute_url()
 
-class ServiceCategorySitemap(Sitemap):
+class ServiceCategorySitemap(BaseSitemap):
     """Sitemap for service category pages"""
     changefreq = 'monthly'
     priority = 0.8
-    protocol = 'https'
     
     def items(self):
         return ServiceCategory.objects.filter(is_active=True)
@@ -97,7 +109,7 @@ class ServiceCategorySitemap(Sitemap):
     def location(self, obj):
         return obj.get_absolute_url()
 
-class BlogSitemap(Sitemap):
+class BlogSitemap(BaseSitemap):
     """Sitemap for blog posts"""
     changefreq = 'weekly'
     priority = 0.6
@@ -113,7 +125,7 @@ class BlogSitemap(Sitemap):
     def location(self, obj):
         return obj.get_absolute_url()
 
-class JobSitemap(Sitemap):
+class JobSitemap(BaseSitemap):
     """Sitemap for job postings"""
     changefreq = 'weekly'
     priority = 0.7
