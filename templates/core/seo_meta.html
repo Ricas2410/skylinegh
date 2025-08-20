@@ -50,6 +50,17 @@
 <meta name="business:contact_data:postal_code" content="00233">
 <meta name="business:contact_data:country_name" content="Ghana">
 
+<!-- Favicon and Icons for Search Results -->
+<!-- Using emoji as temporary favicon until proper icons are created -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
+<link rel="manifest" href="{% load static %}{% static 'images/site.webmanifest' %}">
+
+<!-- Additional meta for search engines -->
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=yes">
+<meta name="format-detection" content="address=yes">
+<meta name="format-detection" content="email=yes">
+
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title }}">

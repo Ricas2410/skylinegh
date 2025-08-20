@@ -25,8 +25,8 @@
       <button onclick="showTab('content')" id="content-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
         Content Images
       </button>
-      <button onclick="showTab('seo')" id="seo-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
-        SEO & Analytics
+      <button onclick="showTab('analytics')" id="analytics-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Analytics
       </button>
     </nav>
   </div>
@@ -761,30 +761,22 @@
     </div>
   </div>
 
-  <!-- SEO & Analytics Tab -->
-  <div id="seo-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
-    <h3 class="text-lg font-semibold text-gray-900 mb-6">SEO & Analytics</h3>
+  <!-- Analytics Tab -->
+  <div id="analytics-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Analytics</h3>
     <div class="space-y-6">
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.meta_keywords.label }}</label>
-        {{ form.meta_keywords }}
-        {% if form.meta_keywords.help_text %}
-          <p class="mt-1 text-xs text-slate-500">{{ form.meta_keywords.help_text }}</p>
-        {% endif %}
-        {% for error in form.meta_keywords.errors %}
-          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
-        {% endfor %}
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.meta_description.label }}</label>
-        {{ form.meta_description }}
-        {% if form.meta_description.help_text %}
-          <p class="mt-1 text-xs text-slate-500">{{ form.meta_description.help_text }}</p>
-        {% endif %}
-        {% for error in form.meta_description.errors %}
-          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
-        {% endfor %}
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-blue-800">SEO Settings</h4>
+            <p class="text-sm text-blue-700">SEO settings are handled in code to ensure consistent SEO optimization across the site.</p>
+          </div>
+        </div>
       </div>
 
       <div>
@@ -796,6 +788,7 @@
         {% for error in form.google_analytics_id.errors %}
           <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
         {% endfor %}
+        <p class="mt-1 text-xs text-slate-500">Enter your Google Analytics tracking ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXXX-X)</p>
       </div>
     </div>
   </div>

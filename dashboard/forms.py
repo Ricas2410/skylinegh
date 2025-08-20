@@ -6,11 +6,11 @@ class SiteSettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
         fields = [
-            'site_name', 'site_tagline', 'site_description',
+            'site_name', 'site_tagline',
             'phone_primary', 'phone_secondary', 'email_primary', 'email_secondary',
             'address_line_1', 'address_line_2', 'city', 'region', 'postal_code',
             'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url', 'youtube_url',
-            'meta_keywords', 'meta_description', 'business_hours',
+            'business_hours',
             'logo', 'favicon',
             'hero_background', 'hero_card_image', 'services_hero_image', 'about_hero_image',
             'contact_hero_image', 'projects_hero_image', 'careers_hero_image', 'blog_hero_image',

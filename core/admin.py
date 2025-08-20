@@ -46,7 +46,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('site_name', 'site_tagline', 'site_description')
+            'fields': ('site_name', 'site_tagline')
         }),
         ('Contact Information', {
             'fields': ('phone_primary', 'phone_secondary', 'email_primary', 'email_secondary',
@@ -84,9 +84,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ('Navigation', {
             'fields': ('blog_url', 'show_blog_in_top_nav', 'get_in_touch_text')
         }),
-        ('SEO', {
-            'fields': ('meta_keywords', 'meta_description')
-        }),
         ('Analytics', {
             'fields': ('google_analytics_id',)
         }),
@@ -102,7 +99,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('site_name', 'site_tagline', 'site_description')
+            'fields': ('site_name', 'site_tagline')
         }),
         ('Contact Information', {
             'fields': ('phone_primary', 'phone_secondary', 'email_primary', 'email_secondary')
@@ -133,8 +130,8 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'description': 'Upload hero images for different pages',
             'classes': ('collapse',)
         }),
-        ('SEO & Analytics', {
-            'fields': ('meta_keywords', 'meta_description', 'google_analytics_id'),
+        ('Analytics', {
+            'fields': ('google_analytics_id',),
             'classes': ('collapse',)
         }),
         ('Business Information', {
