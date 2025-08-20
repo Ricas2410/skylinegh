@@ -15,7 +15,7 @@ def seo_meta(context, obj=None):
     site_settings = context.get('site_settings')
     
     # Enhanced default values with comprehensive construction keywords
-    default_keywords = 'construction Ghana, building contractors Ghana, skyline construction, skyline Ghana, skyline construction company, construction company Accra, residential construction Ghana, commercial construction Ghana, building services Ghana, construction contractors, Ghana builders, skyline GH, construction projects Ghana, building renovation Ghana, property development Ghana, construction management Ghana, architectural services Ghana, civil engineering Ghana, building materials Ghana, construction consultancy Ghana'
+    default_keywords = 'construction Ghana, building contractors Ghana, skyline construction, skyline Ghana, skyline construction company, construction company Accra, residential construction Ghana, commercial construction Ghana, building services Ghana, construction contractors, Ghana builders, skyline GH, construction projects Ghana, building renovation Ghana, property development Ghana, construction management Ghana, architectural services Ghana, civil engineering Ghana, building materials Ghana, construction consultancy Ghana, construction company near me, best construction company Ghana, reliable builders Ghana, quality construction services, affordable construction Ghana, modern construction techniques, sustainable building Ghana, green construction, construction consultancy Ghana, project management Ghana'
 
     meta_data = {
         'title': getattr(site_settings, 'site_name', 'Skyline Ghana Constructions - Premier Building Contractors'),
@@ -67,23 +67,87 @@ def structured_data(obj=None, obj_type='WebPage'):
     # Add construction company specific data for homepage
     if obj_type == 'WebPage' and not obj:
         data.update({
-            "@type": "Organization",
+            "@type": ["Organization", "LocalBusiness", "GeneralContractor"],
             "name": "Skyline Ghana Constructions",
             "alternateName": ["Skyline GH", "Skylink Construction", "Skyline Ghana"],
             "url": "https://skylinegh.com",
             "logo": "https://skylinegh.com/static/images/logo.png",
+            "image": "https://skylinegh.com/static/images/logo.png",
             "description": "Leading construction company in Ghana specializing in residential, commercial, and industrial building projects.",
+            "slogan": "Building Dreams, Creating Futures",
+            "foundingDate": "2015",
             "address": {
                 "@type": "PostalAddress",
-                "addressCountry": "Ghana",
+                "streetAddress": "Construction Avenue",
                 "addressLocality": "Accra",
-                "addressRegion": "Greater Accra"
+                "addressRegion": "Greater Accra",
+                "postalCode": "00233",
+                "addressCountry": "GH"
             },
-            "contactPoint": {
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "5.6037",
+                "longitude": "-0.1870"
+            },
+            "contactPoint": [{
                 "@type": "ContactPoint",
                 "telephone": "+233-24-123-4567",
                 "contactType": "customer service",
-                "email": "info@skylinegh.com"
+                "email": "info@skylinegh.com",
+                "availableLanguage": ["English"]
+            }],
+            "areaServed": {
+                "@type": "Country",
+                "name": "Ghana"
+            },
+            "serviceArea": {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "5.6037",
+                    "longitude": "-0.1870"
+                },
+                "geoRadius": "200000"
+            },
+            "priceRange": "$$",
+            "paymentAccepted": ["Cash", "Credit Card", "Bank Transfer"],
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Construction Services",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Residential Construction",
+                            "description": "Custom home building and residential construction services"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Commercial Construction",
+                            "description": "Office buildings, retail spaces, and commercial construction"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Industrial Construction",
+                            "description": "Warehouses, factories, and industrial facility construction"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Renovation Services",
+                            "description": "Building renovation and remodeling services"
+                        }
+                    }
+                ]
             },
             "sameAs": [
                 "https://www.facebook.com/skylineghana",

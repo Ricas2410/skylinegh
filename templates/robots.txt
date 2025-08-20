@@ -1,24 +1,66 @@
+# Robots.txt for Skyline Ghana Constructions
+# https://skylinegh.com/robots.txt
+
 User-agent: *
 Allow: /
 
-# Disallow admin areas
+# Disallow admin and private areas
 Disallow: /admin/
 Disallow: /my-admin/
+Disallow: /accounts/
+Disallow: /api/
+Disallow: /dashboard/
 
-# Disallow media files that shouldn't be indexed
+# Disallow private media files
 Disallow: /media/private/
 Disallow: /media/uploads/cvs/
 Disallow: /media/uploads/cover_letters/
+Disallow: /media/temp/
 
-# Allow important directories
+# Disallow search and filter URLs to prevent duplicate content
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?sort=*
+Disallow: /*?page=*
+
+# Allow important directories and content
 Allow: /static/
 Allow: /media/images/
 Allow: /media/projects/
 Allow: /media/services/
 Allow: /media/blog/
+Allow: /services/
+Allow: /projects/
+Allow: /blog/
+Allow: /careers/
+Allow: /about/
+Allow: /contact/
 
-# Sitemap location
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Sitemap locations
 Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
 
-# Crawl delay (optional - helps with server load)
+# General crawl delay (helps with server load)
 Crawl-delay: 1

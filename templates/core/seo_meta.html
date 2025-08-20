@@ -2,7 +2,13 @@
 <title>{{ title }}</title>
 <meta name="description" content="{{ description }}">
 <meta name="keywords" content="{{ keywords }}">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Skyline Ghana Constructions">
+<meta name="language" content="en">
+<meta name="geo.region" content="GH">
+<meta name="geo.placename" content="Accra, Ghana">
+<meta name="geo.position" content="5.6037;-0.1870">
+<meta name="ICBM" content="5.6037, -0.1870">
 <link rel="canonical" href="{{ canonical_url }}">
 
 <!-- Open Graph Meta Tags -->
@@ -11,9 +17,38 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:site_name" content="Skyline Ghana Constructions">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="en_GB">
 {% if og_image %}
-<meta property="og:image" content="{{ og_image }}">
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_image }}">
+<meta property="og:image:alt" content="{{ og_title }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 {% endif %}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ og_description }}">
+<meta name="twitter:site" content="@SkylineGhana">
+<meta name="twitter:creator" content="@SkylineGhana">
+{% if og_image %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_image }}">
+<meta name="twitter:image:alt" content="{{ og_title }}">
+{% endif %}
+
+<!-- Additional SEO Meta Tags -->
+<meta name="theme-color" content="#4f46e5">
+<meta name="msapplication-TileColor" content="#4f46e5">
+<meta name="application-name" content="Skyline Ghana">
+<meta name="apple-mobile-web-app-title" content="Skyline Ghana">
+
+<!-- Business/Local SEO -->
+<meta name="business:contact_data:street_address" content="Construction Avenue, Accra">
+<meta name="business:contact_data:locality" content="Accra">
+<meta name="business:contact_data:region" content="Greater Accra">
+<meta name="business:contact_data:postal_code" content="00233">
+<meta name="business:contact_data:country_name" content="Ghana">
 
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image">

@@ -34,6 +34,10 @@ class ServiceCategory(TimeStampedModel):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('services:category_detail', kwargs={'slug': self.slug})
+
 
 class ServicePageImage(models.Model):
     """Images for service category pages - allows admin to upload custom images for each service category"""
