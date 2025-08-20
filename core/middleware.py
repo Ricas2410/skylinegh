@@ -3,6 +3,7 @@ from __future__ import annotations
 from django.utils import timezone
 from django.conf import settings
 from django.urls import resolve
+from django.http import HttpResponsePermanentRedirect
 from dashboard.models import SystemMetrics
 
 
@@ -68,3 +69,26 @@ class VisitorTrackingMiddleware:
         except Exception:
             # Do not interrupt requests if tracking fails
             return
+
+
+class WWWRedirectMiddleware:
+    """
+    Middleware to redirect www.domain.com to domain.com (or vice versa)
+    This ensures consistent canonical URLs for SEO
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Only apply redirects in production
+        if not settings.DEBUG:
+            host = request.get_host().lower()
+
+            # Redirect www.skylinegh.com to skylinegh.com (preferred canonical)
+            if host.startswith('www.'):
+                new_host = host[4:]  # Remove 'www.'
+                new_url = f"{request.scheme}://{new_host}{request.get_full_path()}"
+                return HttpResponsePermanentRedirect(new_url)
+
+        response = self.get_response(request)
+        return response
