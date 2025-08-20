@@ -150,13 +150,14 @@
             <div class="relative">
                 {% with images=site_settings.homepage_carousel_images.all %}
                 {% if images and images.count %}
-                    <div id="homepage-carousel" class="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <div id="homepage-carousel" class="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-100">
                         {% for carousel_image in images|dictsort:"order" %}
                             {% if carousel_image.is_active %}
-                                <div data-carousel-slide class="relative w-full md:h-[360px] lg:h-[420px] transition-opacity duration-700 ease-in-out {% if forloop.first %}opacity-100{% else %}opacity-0 absolute inset-0{% endif %}">
+                                <div data-carousel-slide class="carousel-slide w-full md:h-[360px] lg:h-[420px]">
                                     <img src="{{ carousel_image.image.url }}"
                                          alt="{% if carousel_image.caption %}{{ carousel_image.caption }}{% else %}Skyline Ghana visual {{ forloop.counter }}{% endif %}"
-                                         class="w-full h-full object-cover">
+                                         class="w-full h-full object-cover"
+                                         loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
                                     {% if carousel_image.caption %}
                                         <div class="absolute bottom-4 left-4 right-4">
                                             <div class="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2">
@@ -180,23 +181,134 @@
                           const root = document.getElementById('homepage-carousel');
                           if(!root) return;
                           const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
-                          let i = 0;
-                          function show(n){
-                            slides.forEach((el, idx)=>{
-                              if(idx===n){ el.classList.remove('opacity-0'); el.classList.add('opacity-100'); el.classList.remove('absolute'); }
-                              else { el.classList.add('opacity-0','absolute'); el.classList.remove('opacity-100'); }
+                          if(slides.length <= 1) return; // No need for carousel with single image
+
+                          let currentIndex = 0;
+                          let isTransitioning = false;
+
+                          // Initialize: make sure first slide is active
+                          slides.forEach((slide, idx) => {
+                            if(idx === 0) {
+                              slide.classList.add('active');
+                            } else {
+                              slide.classList.remove('active');
+                            }
+
+                            // Add lazy loading for images
+                            const img = slide.querySelector('img[loading="lazy"]');
+                            if(img && img.complete) {
+                              img.classList.add('loaded');
+                            } else if(img) {
+                              img.addEventListener('load', () => img.classList.add('loaded'));
+                            }
+                          });
+
+                          function showSlide(index) {
+                            if(isTransitioning || index === currentIndex) return;
+                            isTransitioning = true;
+
+                            // Add subtle animation to carousel container
+                            root.style.transform = 'scale(0.98)';
+
+                            setTimeout(() => {
+                              // Remove active from all slides
+                              slides.forEach(slide => slide.classList.remove('active'));
+
+                              // Add active to target slide
+                              slides[index].classList.add('active');
+
+                              currentIndex = index;
+
+                              // Reset container transform
+                              root.style.transform = 'scale(1)';
+
+                              // Reset transition flag after animation
+                              setTimeout(() => {
+                                isTransitioning = false;
+                              }, 200);
+                            }, 100);
+                          }
+
+                          function nextSlide() {
+                            const next = (currentIndex + 1) % slides.length;
+                            showSlide(next);
+                          }
+
+                          function prevSlide() {
+                            const prev = (currentIndex - 1 + slides.length) % slides.length;
+                            showSlide(prev);
+                          }
+
+                          // Auto-advance carousel with smooth timing
+                          let autoTimer = setInterval(nextSlide, 6000);
+
+                          // Enhanced hover interactions
+                          root.addEventListener('mouseenter', () => {
+                            clearInterval(autoTimer);
+                            root.style.animationPlayState = 'paused';
+                          });
+
+                          root.addEventListener('mouseleave', () => {
+                            clearInterval(autoTimer);
+                            autoTimer = setInterval(nextSlide, 6000);
+                            root.style.animationPlayState = 'running';
+                          });
+
+                          // Navigation buttons with enhanced feedback
+                          const nextBtn = document.getElementById('homepage-next');
+                          const prevBtn = document.getElementById('homepage-prev');
+
+                          if(nextBtn) {
+                            nextBtn.addEventListener('click', (e) => {
+                              e.preventDefault();
+                              clearInterval(autoTimer);
+                              nextSlide();
+                              autoTimer = setInterval(nextSlide, 6000);
+
+                              // Button feedback animation
+                              nextBtn.style.transform = 'scale(0.9)';
+                              setTimeout(() => {
+                                nextBtn.style.transform = '';
+                              }, 150);
                             });
                           }
-                          function next(){ i = (i+1)%slides.length; show(i); }
-                          function prev(){ i = (i-1+slides.length)%slides.length; show(i); }
-                          let timer = setInterval(next, 4500);
-                          root.addEventListener('mouseenter', ()=>{ clearInterval(timer); });
-                          root.addEventListener('mouseleave', ()=>{ timer = setInterval(next, 4500); });
-                          const btnN = document.getElementById('homepage-next');
-                          const btnP = document.getElementById('homepage-prev');
-                          if(btnN) btnN.addEventListener('click', ()=>{ next(); });
-                          if(btnP) btnP.addEventListener('click', ()=>{ prev(); });
-                          show(i);
+
+                          if(prevBtn) {
+                            prevBtn.addEventListener('click', (e) => {
+                              e.preventDefault();
+                              clearInterval(autoTimer);
+                              prevSlide();
+                              autoTimer = setInterval(nextSlide, 6000);
+
+                              // Button feedback animation
+                              prevBtn.style.transform = 'scale(0.9)';
+                              setTimeout(() => {
+                                prevBtn.style.transform = '';
+                              }, 150);
+                            });
+                          }
+
+                          // Add keyboard navigation
+                          document.addEventListener('keydown', (e) => {
+                            if(e.key === 'ArrowLeft') {
+                              clearInterval(autoTimer);
+                              prevSlide();
+                              autoTimer = setInterval(nextSlide, 6000);
+                            } else if(e.key === 'ArrowRight') {
+                              clearInterval(autoTimer);
+                              nextSlide();
+                              autoTimer = setInterval(nextSlide, 6000);
+                            }
+                          });
+
+                          // Pause carousel when page is not visible
+                          document.addEventListener('visibilitychange', () => {
+                            if(document.hidden) {
+                              clearInterval(autoTimer);
+                            } else {
+                              autoTimer = setInterval(nextSlide, 6000);
+                            }
+                          });
                         })();
                     </script>
                 {% else %}
