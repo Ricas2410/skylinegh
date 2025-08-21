@@ -107,12 +107,13 @@ class DashboardLoginView(LoginView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='login',
-                model_name='User',
-                object_id=str(self.request.user.pk),
-                message='User logged in'
+                content_type='User',
+                object_id=self.request.user.pk,
+                object_repr=self.request.user.username,
+                description='User logged in'
             )
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Error logging login activity: {e}")
         return response
 
 class DashboardLogoutView(LogoutView):
@@ -122,15 +123,18 @@ class DashboardLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         user = request.user if request.user.is_authenticated else None
         try:
-            ActivityLog.objects.create(
-                user=user,
-                action='logout',
-                model_name='User',
-                object_id=str(user.pk) if user else '',
-                message='User logged out'
-            )
-        except Exception:
-            pass
+            if user:
+                ActivityLog.objects.create(
+                    user=user,
+                    action='logout',
+                    content_type='User',
+                    object_id=user.pk,
+                    object_repr=user.username,
+                    description='User logged out'
+                )
+        except Exception as e:
+            # Log the error but don't break logout
+            print(f"Error logging logout activity: {e}")
         return super().dispatch(request, *args, **kwargs)
 
 # Project Management Views
@@ -904,9 +908,10 @@ class TestimonialCreateView(LoginRequiredMixin, CreateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='create',
-                model_name='Testimonial',
-                object_id=str(self.object.pk),
-                message=f"Created testimonial for {self.object.name}"
+                content_type='Testimonial',
+                object_id=self.object.pk,
+                object_repr=self.object.name,
+                description=f"Created testimonial for {self.object.name}"
             )
         except Exception:
             pass
@@ -929,9 +934,10 @@ class BlogDeleteView(LoginRequiredMixin, DeleteView):
             ActivityLog.objects.create(
                 user=request.user,
                 action='delete',
-                model_name='BlogPost',
-                object_id=str(pk),
-                message=f"Deleted blog post '{title}'"
+                content_type='BlogPost',
+                object_id=pk,
+                object_repr=title,
+                description=f"Deleted blog post '{title}'"
             )
         except Exception:
             pass
@@ -952,9 +958,10 @@ class TestimonialUpdateView(LoginRequiredMixin, UpdateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='update',
-                model_name='Testimonial',
-                object_id=str(self.object.pk),
-                message=f"Updated testimonial for {self.object.name}"
+                content_type='Testimonial',
+                object_id=self.object.pk,
+                object_repr=self.object.name,
+                description=f"Updated testimonial for {self.object.name}"
             )
         except Exception:
             pass
@@ -981,9 +988,10 @@ class TestimonialDeleteView(LoginRequiredMixin, DeleteView):
             ActivityLog.objects.create(
                 user=request.user,
                 action='delete',
-                model_name='Testimonial',
-                object_id=str(pk),
-                message=f"Deleted testimonial for {name}"
+                content_type='Testimonial',
+                object_id=pk,
+                object_repr=name,
+                description=f"Deleted testimonial for {name}"
             )
         except Exception:
             pass
@@ -1023,9 +1031,10 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='create',
-                model_name='BlogPost',
-                object_id=str(self.object.pk),
-                message=f"Created blog post '{self.object.title}'"
+                content_type='BlogPost',
+                object_id=self.object.pk,
+                object_repr=self.object.title,
+                description=f"Created blog post '{self.object.title}'"
             )
         except Exception:
             pass
@@ -1046,9 +1055,10 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='update',
-                model_name='BlogPost',
-                object_id=str(self.object.pk),
-                message=f"Updated blog post '{self.object.title}'"
+                content_type='BlogPost',
+                object_id=self.object.pk,
+                object_repr=self.object.title,
+                description=f"Updated blog post '{self.object.title}'"
             )
         except Exception:
             pass
@@ -1115,10 +1125,11 @@ class SettingsView(LoginRequiredMixin, TemplateView):
             try:
                 ActivityLog.objects.create(
                     user=request.user,
-                    action='settings',
-                    model_name='SiteSettings',
-                    object_id=str(obj.pk),
-                    message='Updated site settings'
+                    action='update',
+                    content_type='SiteSettings',
+                    object_id=obj.pk,
+                    object_repr='Site Settings',
+                    description='Updated site settings'
                 )
             except Exception:
                 pass
@@ -1249,9 +1260,10 @@ class HomepageCarouselCreateView(LoginRequiredMixin, CreateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='create',
-                model_name='HomepageCarouselImage',
-                object_id=str(self.object.pk),
-                message=f"Added homepage carousel image #{self.object.pk}"
+                content_type='HomepageCarouselImage',
+                object_id=self.object.pk,
+                object_repr=f"Carousel Image #{self.object.pk}",
+                description=f"Added homepage carousel image #{self.object.pk}"
             )
         except Exception:
             pass
@@ -1278,9 +1290,10 @@ class HomepageCarouselUpdateView(LoginRequiredMixin, UpdateView):
             ActivityLog.objects.create(
                 user=self.request.user,
                 action='update',
-                model_name='HomepageCarouselImage',
-                object_id=str(self.object.pk),
-                message=f"Updated homepage carousel image #{self.object.pk}"
+                content_type='HomepageCarouselImage',
+                object_id=self.object.pk,
+                object_repr=f"Carousel Image #{self.object.pk}",
+                description=f"Updated homepage carousel image #{self.object.pk}"
             )
         except Exception:
             pass
@@ -1308,9 +1321,10 @@ class HomepageCarouselDeleteView(LoginRequiredMixin, DeleteView):
             ActivityLog.objects.create(
                 user=request.user,
                 action='delete',
-                model_name='HomepageCarouselImage',
-                object_id=str(pk),
-                message=f"Deleted homepage carousel image #{pk}"
+                content_type='HomepageCarouselImage',
+                object_id=pk,
+                object_repr=f"Carousel Image #{pk}",
+                description=f"Deleted homepage carousel image #{pk}"
             )
         except Exception:
             pass
