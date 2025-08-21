@@ -98,11 +98,11 @@
                 </p>
                 <div class="grid grid-cols-2 gap-8">
                     <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
-                        <div class="text-4xl font-bold text-blue-600 mb-3" data-counter="25">0</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-3" data-counter="{{ site_settings.years_experience|default:25 }}">0</div>
                         <p class="text-gray-700 font-medium">Years Experience</p>
                     </div>
                     <div class="text-center p-6 bg-gradient-to-br from-coral-50 to-orange-50 rounded-xl">
-                        <div class="text-4xl font-bold text-coral-600 mb-3" data-counter="500">0</div>
+                        <div class="text-4xl font-bold text-coral-600 mb-3" data-counter="{{ site_settings.projects_completed|default:500 }}">0</div>
                         <p class="text-gray-700 font-medium">Projects Completed</p>
                     </div>
                 </div>

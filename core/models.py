@@ -100,6 +100,12 @@ class SiteSettings(models.Model):
     # Analytics
     google_analytics_id = models.CharField(max_length=50, blank=True)
 
+    # Company Statistics
+    projects_completed = models.PositiveIntegerField(default=500, help_text="Total number of projects completed")
+    square_feet_built = models.PositiveIntegerField(default=1000000, help_text="Total square feet built")
+    client_satisfaction = models.PositiveIntegerField(default=98, help_text="Client satisfaction percentage (0-100)")
+    years_experience = models.PositiveIntegerField(default=25, help_text="Years of experience in construction")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -109,6 +115,12 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return self.site_name
+
+    def save(self, *args, **kwargs):
+        """Clear cache when site settings are updated"""
+        super().save(*args, **kwargs)
+        from django.core.cache import cache
+        cache.delete('site_settings_v2')  # Clear cached site settings
 
     def save(self, *args, **kwargs):
         # Resize logo and favicon if we have a local filesystem path (FileSystemStorage).

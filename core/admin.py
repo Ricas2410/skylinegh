@@ -130,6 +130,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'description': 'Upload hero images for different pages',
             'classes': ('collapse',)
         }),
+        ('Company Statistics', {
+            'fields': ('projects_completed', 'square_feet_built', 'client_satisfaction', 'years_experience'),
+            'description': 'Statistics displayed on the website (projects page, about page, etc.)',
+        }),
         ('Analytics', {
             'fields': ('google_analytics_id',),
             'classes': ('collapse',)

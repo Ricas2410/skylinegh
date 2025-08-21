@@ -192,19 +192,19 @@
         
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="text-center animate-on-scroll">
-                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="500">0</div>
+                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="{{ site_settings.projects_completed|default:500 }}">0</div>
                 <p class="text-gray-600 font-medium">Projects Completed</p>
             </div>
             <div class="text-center animate-on-scroll">
-                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="1000000">0</div>
+                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="{{ site_settings.square_feet_built|default:1000000 }}">0</div>
                 <p class="text-gray-600 font-medium">Sq Ft Built</p>
             </div>
             <div class="text-center animate-on-scroll">
-                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="98">0</div>
+                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="{{ site_settings.client_satisfaction|default:98 }}">0</div>
                 <p class="text-gray-600 font-medium">% Client Satisfaction</p>
             </div>
             <div class="text-center animate-on-scroll">
-                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="25">0</div>
+                <div class="text-4xl lg:text-5xl font-bold text-blue-600 mb-2" data-counter="{{ site_settings.years_experience|default:25 }}">0</div>
                 <p class="text-gray-600 font-medium">Years Experience</p>
             </div>
         </div>
@@ -299,6 +299,47 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-counter'));
+        const duration = 2000; // 2 seconds
+        const start = 0;
+        const increment = target / (duration / 16); // 60fps
+        let current = start;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+
+            // Format large numbers with commas
+            const displayValue = Math.floor(current).toLocaleString();
+            element.textContent = displayValue;
+        }, 16);
+    }
+
+    // Intersection Observer for counter animation
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target.querySelector('[data-counter]');
+                if (counter && !counter.classList.contains('animated')) {
+                    counter.classList.add('animated');
+                    animateCounter(counter);
+                }
+            }
+        });
+    }, { threshold: 0.5 });
+
+    // Observe all counter containers
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        if (el.querySelector('[data-counter]')) {
+            counterObserver.observe(el);
+        }
+    });
+
     // Lightbox functionality
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightbox-image');

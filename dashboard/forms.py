@@ -23,6 +23,7 @@ class SiteSettingsForm(forms.ModelForm):
             'top_navbar_email', 'top_navbar_phone',
             'blog_url', 'show_blog_in_top_nav',
             'google_analytics_id',
+            'projects_completed', 'square_feet_built', 'client_satisfaction', 'years_experience',
         ]
 
     def __init__(self, *args, **kwargs):

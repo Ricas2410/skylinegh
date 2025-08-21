@@ -13,14 +13,27 @@ class BaseSitemap(Sitemap):
     protocol = 'https'
 
     def get_urls(self, site=None, **kwargs):
-        """Override to ensure production URLs"""
-        urls = super().get_urls(site=site, **kwargs)
-        for url in urls:
-            # Force production domain
-            if 'localhost' in url['location'] or '127.0.0.1' in url['location']:
-                url['location'] = url['location'].replace('http://localhost:8000', 'https://skylinegh.com')
-                url['location'] = url['location'].replace('https://localhost:8000', 'https://skylinegh.com')
-                url['location'] = url['location'].replace('http://127.0.0.1:8000', 'https://skylinegh.com')
+        """Override to ensure production URLs with caching"""
+        from django.core.cache import cache
+
+        # Try to get from cache first
+        cache_key = f'sitemap_{self.__class__.__name__.lower()}'
+        urls = cache.get(cache_key)
+
+        if urls is None:
+            urls = super().get_urls(site=site, **kwargs)
+            for url in urls:
+                # Force production domain
+                if 'localhost' in url['location'] or '127.0.0.1' in url['location']:
+                    url['location'] = url['location'].replace('http://localhost:8000', 'https://skylinegh.com')
+                    url['location'] = url['location'].replace('https://localhost:8000', 'https://skylinegh.com')
+                    url['location'] = url['location'].replace('http://127.0.0.1:8000', 'https://skylinegh.com')
+                # Ensure no www in URLs
+                url['location'] = url['location'].replace('://www.', '://')
+
+            # Cache for 1 hour
+            cache.set(cache_key, urls, 3600)
+
         return urls
 
 class StaticViewSitemap(BaseSitemap):

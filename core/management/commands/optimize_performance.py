@@ -64,6 +64,18 @@ class Command(BaseCommand):
         self.stdout.write('🧹 Clearing cache...')
         try:
             cache.clear()
+
+            # Also clear specific cache keys
+            cache_keys = [
+                'site_settings_v2',
+                'sitemap_cache',
+                'robots_txt_cache',
+                'meta_tags_cache',
+            ]
+
+            for key in cache_keys:
+                cache.delete(key)
+
             self.stdout.write(
                 self.style.SUCCESS('✅ Cache cleared successfully')
             )

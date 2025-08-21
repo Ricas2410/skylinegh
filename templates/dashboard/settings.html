@@ -25,6 +25,9 @@
       <button onclick="showTab('content')" id="content-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
         Content Images
       </button>
+      <button onclick="showTab('statistics')" id="statistics-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Statistics
+      </button>
       <button onclick="showTab('analytics')" id="analytics-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
         Analytics
       </button>
@@ -789,6 +792,59 @@
           <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
         {% endfor %}
         <p class="mt-1 text-xs text-slate-500">Enter your Google Analytics tracking ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXXX-X)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Company Statistics Tab -->
+  <div id="statistics-content" class="tab-content bg-white rounded-2xl p-6 border border-slate-200 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Company Statistics</h3>
+    <p class="text-sm text-slate-600 mb-6">These statistics are displayed on your website's projects page, about page, and other sections.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.projects_completed.label }}</label>
+        {{ form.projects_completed }}
+        {% if form.projects_completed.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.projects_completed.help_text }}</p>
+        {% endif %}
+        {% for error in form.projects_completed.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.square_feet_built.label }}</label>
+        {{ form.square_feet_built }}
+        {% if form.square_feet_built.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.square_feet_built.help_text }}</p>
+        {% endif %}
+        {% for error in form.square_feet_built.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.client_satisfaction.label }}</label>
+        {{ form.client_satisfaction }}
+        {% if form.client_satisfaction.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.client_satisfaction.help_text }}</p>
+        {% endif %}
+        {% for error in form.client_satisfaction.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
+        <p class="mt-1 text-xs text-slate-500">Enter a percentage value (0-100)</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.years_experience.label }}</label>
+        {{ form.years_experience }}
+        {% if form.years_experience.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ form.years_experience.help_text }}</p>
+        {% endif %}
+        {% for error in form.years_experience.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
     </div>
   </div>
