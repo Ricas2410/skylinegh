@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Skyline Ghana Constructions - Premier Building Contractors in Ghana | Construction Services Accra{% endblock %}
+{% block title %}Skyline Ghana - Premier Construction Company in Ghana{% endblock %}
 
 {% block seo_meta %}
-    <title>Skyline Ghana Constructions - Premier Building Contractors in Ghana | Construction Services Accra</title>
-    <meta name="description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana. Get free quotes for your construction project today.">
-    <meta name="keywords" content="skylinegh, skyline ghana, construction company ghana, building contractors ghana, construction services accra, residential construction ghana, commercial construction ghana, industrial construction ghana, building contractors accra, construction company accra, ghana construction, building services ghana">
+    <title>Skyline Ghana - Premier Construction Company in Ghana</title>
+    <meta name="description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial projects. Expert contractors delivering quality construction services across Accra and all regions of Ghana.">
+    <meta name="keywords" content="skylinegh, skyline ghana, construction company ghana, building contractors ghana, construction services accra, residential construction ghana, commercial construction ghana, industrial construction ghana">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="author" content="Skyline Ghana Constructions">
     <meta name="language" content="en">
@@ -17,8 +17,8 @@
     <link rel="canonical" href="https://skylinegh.com/">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Skyline Ghana Constructions - Premier Building Contractors in Ghana">
-    <meta property="og:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana.">
+    <meta property="og:title" content="Skyline Ghana - Premier Construction Company in Ghana">
+    <meta property="og:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial projects. Expert contractors delivering quality construction services.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://skylinegh.com/">
     <meta property="og:site_name" content="Skyline Ghana Constructions">
@@ -30,8 +30,8 @@
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Skyline Ghana Constructions - Premier Building Contractors in Ghana">
-    <meta name="twitter:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial building projects. Expert contractors delivering quality construction services across Accra, Kumasi, and all regions of Ghana.">
+    <meta name="twitter:title" content="Skyline Ghana - Premier Construction Company in Ghana">
+    <meta name="twitter:description" content="Leading construction company in Ghana specializing in residential, commercial, and industrial projects. Expert contractors delivering quality construction services.">
     <meta name="twitter:site" content="@SkylineGhana">
     <meta name="twitter:creator" content="@SkylineGhana">
     <meta name="twitter:image" content="https://skylinegh.com/static/images/skyline-logo-og.png">
@@ -144,7 +144,7 @@
                     {{ site_settings.hero_subtitle|default:"Skyline Ghana Constructions is a leading name in construction and design, transforming visions into reality with precision, innovation, and a commitment to quality." }}
                 </p>
                 <p class="text-base text-slate-600 leading-relaxed mb-6">
-                    With over a decade of experience in Ghana's construction industry, we have successfully completed hundreds of projects ranging from luxury residential homes to large-scale commercial developments. Our team of certified engineers, architects, and skilled craftsmen work together to deliver exceptional results that exceed client expectations. We pride ourselves on using cutting-edge construction techniques, sustainable building practices, and premium materials sourced from trusted suppliers worldwide.
+                    With over {{ site_settings.years_experience|default:25 }} years of experience in Ghana's construction industry, we have successfully completed {{ site_settings.projects_completed|default:500 }}+ projects ranging from luxury residential homes to large-scale commercial developments. Our team of certified engineers, architects, and skilled craftsmen work together to deliver exceptional results that exceed client expectations. We pride ourselves on using cutting-edge construction techniques, sustainable building practices, and premium materials sourced from trusted suppliers worldwide.
                 </p>
 
                 <!-- Desktop Features: compact cards sitting under About text -->
@@ -815,6 +815,26 @@
             </p>
         </div>
 
+        <!-- Statistics Section -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center">
+                <div class="text-3xl lg:text-4xl font-bold text-blue-600 mb-2" data-counter="{{ site_settings.years_experience|default:25 }}">0</div>
+                <p class="text-slate-700 font-medium">Years Experience</p>
+            </div>
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
+                <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2" data-counter="{{ site_settings.projects_completed|default:500 }}">0</div>
+                <p class="text-slate-700 font-medium">Projects Completed</p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
+                <div class="text-3xl lg:text-4xl font-bold text-purple-600 mb-2" data-counter="{{ site_settings.square_feet_built|default:1000000 }}">0</div>
+                <p class="text-slate-700 font-medium">Square Feet Built</p>
+            </div>
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center">
+                <div class="text-3xl lg:text-4xl font-bold text-orange-600 mb-2" data-counter="{{ site_settings.client_satisfaction|default:98 }}">0</div>
+                <p class="text-slate-700 font-medium">Client Satisfaction</p>
+            </div>
+        </div>
+
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             <div class="bg-white rounded-xl p-6 shadow-lg text-center">
                 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -842,8 +862,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">10+ Years</h3>
-                <p class="text-slate-600 text-sm">Over a decade of construction excellence in Ghana with hundreds of successful projects and satisfied clients across all sectors.</p>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">{{ site_settings.years_experience|default:25 }}+ Years</h3>
+                <p class="text-slate-600 text-sm">Over {{ site_settings.years_experience|default:25 }} years of construction excellence in Ghana with {{ site_settings.projects_completed|default:500 }}+ successful projects and satisfied clients across all sectors.</p>
             </div>
 
             <div class="bg-white rounded-xl p-6 shadow-lg text-center">
@@ -988,7 +1008,7 @@
                 </span>
             </h2>
             <p class="text-xl lg:text-2xl text-indigo-100 mb-12 leading-relaxed">
-                Join hundreds of satisfied clients who have trusted Skyline Ghana with their most important construction projects.
+                Join {{ site_settings.projects_completed|default:500 }}+ satisfied clients who have trusted Skyline Ghana with their most important construction projects.
                 Let's turn your vision into reality.
             </p>
             <div class="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-8">
@@ -1034,6 +1054,47 @@
         }, { threshold: 0.1 });
 
         animatedElements.forEach(el => observer.observe(el));
+
+        // Counter Animation
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                // Format large numbers
+                let displayValue = Math.floor(current);
+                if (target >= 1000000) {
+                    displayValue = (Math.floor(current / 100000) / 10).toFixed(1) + 'M';
+                } else if (target >= 1000) {
+                    displayValue = (Math.floor(current / 100) / 10).toFixed(0) + 'K';
+                } else if (target <= 100) {
+                    displayValue = Math.floor(current) + '%';
+                }
+
+                element.textContent = displayValue;
+            }, 16);
+        }
+
+        // Initialize counters
+        const counters = document.querySelectorAll('[data-counter]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    const target = parseInt(entry.target.getAttribute('data-counter'));
+                    entry.target.classList.add('animated');
+                    animateCounter(entry.target, target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
     });
 </script>
 {% endblock %}

@@ -29,7 +29,7 @@
                 About <span class="text-gradient-hero">Skyline Ghana</span>
             </h1>
             <p class="text-xl lg:text-2xl text-blue-200 mb-8 max-w-3xl mx-auto animate-fade-in-up" style="animation-delay: 0.2s;">
-                Building Ghana's future with over 25 years of construction excellence, innovation, and commitment to quality.
+                Building Ghana's future with over {{ site_settings.years_experience|default:25 }} years of construction excellence, innovation, and commitment to quality.
             </p>
         </div>
     </div>
@@ -94,7 +94,7 @@
                     Founded in 1998, Skyline Ghana Constructions has grown from a small local contractor to one of Ghana's most trusted construction companies. Our journey began with a simple vision: to build structures that stand the test of time while contributing to Ghana's development.
                 </p>
                 <p class="text-lg text-gray-600 mb-10 leading-relaxed">
-                    Today, we've completed over 500 projects across residential, commercial, and industrial sectors, earning a reputation for excellence, reliability, and innovation in the construction industry.
+                    Today, we've completed over {{ site_settings.projects_completed|default:500 }} projects across residential, commercial, and industrial sectors, earning a reputation for excellence, reliability, and innovation in the construction industry.
                 </p>
                 <div class="grid grid-cols-2 gap-8">
                     <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
@@ -349,4 +349,52 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Counter Animation
+function animateCounter(element, target, duration = 2000) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+
+        // Format large numbers
+        let displayValue = Math.floor(current);
+        if (target >= 1000000) {
+            displayValue = (Math.floor(current / 100000) / 10).toFixed(1) + 'M';
+        } else if (target >= 1000) {
+            displayValue = (Math.floor(current / 100) / 10).toFixed(0) + 'K';
+        } else if (target <= 100) {
+            displayValue = Math.floor(current) + '%';
+        }
+
+        element.textContent = displayValue;
+    }, 16);
+}
+
+// Initialize counters when they come into view
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('[data-counter]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                const target = parseInt(entry.target.getAttribute('data-counter'));
+                entry.target.classList.add('animated');
+                animateCounter(entry.target, target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+});
+</script>
 {% endblock %}
