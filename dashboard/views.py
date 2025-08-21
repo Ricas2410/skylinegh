@@ -116,12 +116,24 @@ class DashboardLoginView(LoginView):
             print(f"Error logging login activity: {e}")
         return response
 
-class DashboardLogoutView(LogoutView):
+class DashboardLogoutView(View):
     """Dashboard logout"""
-    next_page = '/my-admin/login/'
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        """Handle logout for GET requests"""
+        return self.logout_user(request)
+
+    def post(self, request, *args, **kwargs):
+        """Handle logout for POST requests"""
+        return self.logout_user(request)
+
+    def logout_user(self, request):
+        """Perform the actual logout"""
+        from django.contrib.auth import logout
+
         user = request.user if request.user.is_authenticated else None
+
+        # Log the logout activity
         try:
             if user:
                 ActivityLog.objects.create(
@@ -135,7 +147,12 @@ class DashboardLogoutView(LogoutView):
         except Exception as e:
             # Log the error but don't break logout
             print(f"Error logging logout activity: {e}")
-        return super().dispatch(request, *args, **kwargs)
+
+        # Perform logout
+        logout(request)
+
+        # Redirect to login page
+        return redirect('/my-admin/login/')
 
 # Project Management Views
 class ProjectListView(LoginRequiredMixin, ListView):
