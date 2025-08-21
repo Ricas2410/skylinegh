@@ -148,6 +148,99 @@
             justify-content: center;
             margin-right: 12px;
         }
+
+        /* Custom scrollbar for sidebar */
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(71 85 105) rgb(30 41 59);
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: rgb(30 41 59);
+            border-radius: 3px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: rgb(71 85 105);
+            border-radius: 3px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: rgb(100 116 139);
+        }
+
+        /* Ensure sidebar works well on all screen sizes */
+        @media (max-width: 1023px) {
+            #sidebar {
+                height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for mobile */
+            }
+        }
+
+        /* Tablet optimizations */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            #sidebar {
+                width: 280px;
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 767px) {
+            #sidebar {
+                width: 100vw;
+                max-width: 320px;
+            }
+
+            .nav-link {
+                padding: 12px 20px;
+                margin: 2px 12px;
+                font-size: 16px; /* Better touch targets */
+            }
+        }
+
+        @media (max-height: 600px) {
+            .nav-link {
+                padding: 8px 16px;
+                margin: 2px 8px;
+            }
+
+            .sidebar-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            /* Compact header on short screens */
+            #sidebar .h-20 {
+                height: 60px;
+            }
+        }
+
+        /* Landscape mobile optimizations */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .nav-link {
+                padding: 6px 16px;
+                margin: 1px 8px;
+                font-size: 14px;
+            }
+
+            #sidebar .h-20 {
+                height: 50px;
+            }
+
+            .sidebar-logo {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -155,7 +248,7 @@
 <body class="dashboard bg-slate-50">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar-transition sidebar-hidden fixed inset-y-0 left-0 z-50 w-72 bg-slate-950 shadow-2xl lg:static lg:inset-0 flex flex-col" aria-hidden="true">
+        <div id="sidebar" class="sidebar-transition sidebar-hidden fixed inset-y-0 left-0 z-50 w-72 bg-slate-950 shadow-2xl lg:static lg:inset-0 flex flex-col max-h-screen" aria-hidden="true">
             <!-- Logo -->
             <div class="flex items-center justify-between h-20 px-6 border-b border-slate-800/70">
                 <div class="flex items-center">
@@ -177,7 +270,7 @@
             </div>
             
             <!-- Navigation -->
-            <nav class="flex-1 px-2 py-4 overflow-y-auto min-h-0">
+            <nav class="flex-1 px-2 py-4 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
                 <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}nav-link-active{% endif %}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-7 4h6"></path></svg>
                     <span>Dashboard</span>
@@ -353,9 +446,45 @@
         // Close sidebar when a nav link is tapped (mobile)
         document.querySelectorAll('#sidebar a.nav-link').forEach(a => {
             a.addEventListener('click', () => {
-                if (window.innerWidth < 1024) closeSidebar();
+                if (window.innerWidth < 1024) {
+                    // Add a small delay to allow the navigation to start
+                    setTimeout(closeSidebar, 100);
+                }
             });
         });
+
+        // Prevent scrolling on body when sidebar is open on mobile
+        function preventBodyScroll(prevent) {
+            if (prevent) {
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${window.scrollY}px`;
+                document.body.style.width = '100%';
+            } else {
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
+        }
+
+        // Update open/close functions to handle body scroll
+        const originalOpenSidebar = openSidebar;
+        const originalCloseSidebar = closeSidebar;
+
+        openSidebar = function() {
+            originalOpenSidebar();
+            if (window.innerWidth < 1024) {
+                preventBodyScroll(true);
+            }
+        };
+
+        closeSidebar = function() {
+            originalCloseSidebar();
+            if (window.innerWidth < 1024) {
+                preventBodyScroll(false);
+            }
+        };
 
         // ESC to close
         document.addEventListener('keydown', (e) => {
@@ -370,6 +499,16 @@
                 document.body.style.overflow = '';
             }
         });
+
+        // Handle viewport height changes on mobile (for better mobile experience)
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
     </script>
     
     <script>
