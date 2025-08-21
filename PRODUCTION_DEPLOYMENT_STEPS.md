@@ -1,7 +1,7 @@
 # 🚀 Production Deployment Steps - Statistics Fix
 
 ## The Problem
-The statistics on your live site (skylineghana.com) are showing as 0 because the recent changes are only in the development environment. We need to deploy these changes to production.
+The statistics on your live site (skylinegh.com) are showing as 0 because the recent changes are only in the development environment. We need to deploy these changes to production.
 
 ## 🔧 Quick Fix (Recommended)
 
@@ -85,7 +85,7 @@ sudo service your-web-server restart
 
 ## 🔍 Verification Steps
 
-1. **Check the website**: Visit https://skylineghana.com/projects/
+1. **Check the website**: Visit https://skylinegh.com/projects/
 2. **Look for the statistics section**: Should show the numbers instead of 0s
 3. **Test the admin**: Go to `/my-admin/settings/` and check the Statistics tab
 4. **Clear browser cache**: If you still see 0s, clear your browser cache
@@ -183,6 +183,14 @@ If you encounter issues:
 2. **Monitor performance**: Check if site loads faster with caching
 3. **SEO verification**: Verify meta tags are working properly
 4. **Regular updates**: Keep statistics current as you complete more projects
+
+Once deployed, you can customize these numbers:
+
+1. Go to: `https://skylinegh.com/my-admin/settings/`
+2. Click the **"Statistics"** tab
+3. Update the values with your actual numbers
+4. Click **"Save Settings"**
+5. The changes will appear immediately on the website
 
 ---
 
