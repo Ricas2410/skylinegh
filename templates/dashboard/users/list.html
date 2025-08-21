@@ -8,7 +8,7 @@
         <h2 class="text-2xl font-bold text-gray-900 mb-2">User Management</h2>
         <p class="text-gray-600">Manage user accounts and permissions</p>
     </div>
-    <button onclick="openCreateUserModal()" class="btn-primary-submit" style="text-decoration: none;">
+    <button onclick="openCreateUserModal()" class="btn-primary-custom">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -182,41 +182,63 @@
 
 {% endblock %}
 
+{% block extra_css %}
 <style>
-/* Submit button styling with fallback colors */
-.btn-primary-submit {
-    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
-    color: white !important;
-    padding: 12px 24px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    border: none !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+/* Custom button styling */
+.btn-primary-custom {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    font-size: 14px;
 }
 
-.btn-primary-submit:hover {
-    background: linear-gradient(135deg, #3730a3 0%, #1e40af 100%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35) !important;
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #3730a3 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
 }
 
-.btn-primary-submit:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+.btn-primary-custom:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.btn-primary-custom svg {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
 }
 </style>
+{% endblock %}
 
+{% block extra_js %}
 <script>
+// User management modal functions
 function openCreateUserModal() {
-    document.getElementById('createUserModal').classList.remove('hidden');
+    console.log('Opening create user modal');
+    const modal = document.getElementById('createUserModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        console.log('Modal opened successfully');
+    } else {
+        console.error('Create user modal not found');
+    }
 }
 
 function closeCreateUserModal() {
-    document.getElementById('createUserModal').classList.add('hidden');
+    console.log('Closing create user modal');
+    const modal = document.getElementById('createUserModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
 }
 
 function openEditUserModal(userId, username, email, firstName, lastName, isStaff, isActive) {
@@ -261,4 +283,18 @@ window.onclick = function(event) {
         closeDeleteUserModal();
     }
 }
+
+// Ensure DOM is loaded before attaching events
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('User management page loaded');
+
+    // Make functions globally available
+    window.openCreateUserModal = openCreateUserModal;
+    window.closeCreateUserModal = closeCreateUserModal;
+    window.openEditUserModal = openEditUserModal;
+    window.closeEditUserModal = closeEditUserModal;
+    window.openDeleteUserModal = openDeleteUserModal;
+    window.closeDeleteUserModal = closeDeleteUserModal;
+});
 </script>
+{% endblock %}
