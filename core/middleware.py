@@ -36,6 +36,7 @@ class VisitorTrackingMiddleware:
     def _maybe_track(self, request):
         try:
             path = request.path or "/"
+
             # Exclude prefixes
             if any(path.startswith(p) for p in self.EXCLUDED_PREFIXES):
                 return
@@ -44,30 +45,52 @@ class VisitorTrackingMiddleware:
             if request.method != "GET":
                 return
 
-            # Optionally skip AJAX
+            # Skip AJAX requests
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return
+
+            # Skip bots and crawlers (basic detection)
+            user_agent = request.headers.get("user-agent", "").lower()
+            bot_indicators = ["bot", "crawler", "spider", "scraper", "curl", "wget"]
+            if any(indicator in user_agent for indicator in bot_indicators):
                 return
 
             # Count unique session per day to reduce inflation
             session = getattr(request, "session", None)
             today_key = f"visited:{timezone.localdate().isoformat()}"
+
             if session is not None:
+                # Check if this session already visited today
                 if session.get(today_key):
                     return
+
+                # Mark session as visited today
                 session[today_key] = True
                 session.modified = True
+            else:
+                # If no session available, still track but this might cause some inflation
+                pass
 
             # Increment daily counter
             metric_date = timezone.localdate()
-            obj, _ = SystemMetrics.objects.get_or_create(
+            obj, created = SystemMetrics.objects.get_or_create(
                 metric_name="visitors",
                 metric_date=metric_date,
                 defaults={"metric_value": 0},
             )
-            obj.metric_value = (obj.metric_value or 0) + 1
+
+            # Use F() expression for atomic increment to avoid race conditions
+            from django.db.models import F
+            obj.metric_value = F('metric_value') + 1
             obj.save(update_fields=["metric_value"])
-        except Exception:
-            # Do not interrupt requests if tracking fails
+
+            # Refresh from database to get actual value for logging
+            obj.refresh_from_db()
+
+        except Exception as e:
+            # Log error in development but don't interrupt requests
+            if settings.DEBUG:
+                print(f"Visitor tracking error: {e}")
             return
 
 

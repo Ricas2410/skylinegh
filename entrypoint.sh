@@ -78,6 +78,29 @@ except Exception as e:
     print(f'⚠️ Statistics check failed: {e}')
 " 2>/dev/null || echo "⚠️ Statistics check skipped"
 
+# Check visitor tracking setup
+echo "👥 Checking visitor tracking..."
+python -c "
+import os, django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skylinegh.production_settings')
+django.setup()
+from dashboard.models import SystemMetrics
+from django.utils import timezone
+try:
+    today = timezone.localdate()
+    metric, created = SystemMetrics.objects.get_or_create(
+        metric_name='visitors',
+        metric_date=today,
+        defaults={'metric_value': 0}
+    )
+    if created:
+        print('✅ Visitor tracking initialized for today')
+    else:
+        print(f'✅ Visitor tracking active: {int(metric.metric_value)} visitors today')
+except Exception as e:
+    print(f'⚠️ Visitor tracking setup failed: {e}')
+" 2>/dev/null || echo "⚠️ Visitor tracking check skipped"
+
 # Skip sample data in production to save startup time
 if [ "${POPULATE_SAMPLE_DATA:-false}" = "true" ]; then
     echo "📊 Populating sample data..."
