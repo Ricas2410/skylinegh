@@ -12,14 +12,16 @@ from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
 
-from projects.models import Project, ProjectImage
+from projects.models import Project, ProjectImage, ProjectCategory
 from services.models import Service, ServiceCategory, ServicePageImage
 from core.models import ContactInquiry, SiteSettings, Testimonial, HomepageCarouselImage
 from .models import ActivityLog, SystemMetrics
 from careers.models import JobPosition, JobApplication
 from blog.models import BlogPost
 from django.contrib.auth.models import User
-from .forms import SiteSettingsForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+from .forms import SiteSettingsForm, ProjectForm, CustomUserCreationForm, UserUpdateForm
 
 class DashboardHomeView(LoginRequiredMixin, TemplateView):
     """Dashboard home page with analytics"""
@@ -154,11 +156,8 @@ class ProjectListView(LoginRequiredMixin, ListView):
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     """Create new project"""
     model = Project
+    form_class = ProjectForm
     template_name = 'dashboard/projects/form.html'
-    fields = [
-        'title', 'short_description', 'description', 'location', 'client_name', 'project_type',
-        'service_category', 'start_date', 'featured_image', 'is_featured', 'is_published'
-    ]
     login_url = '/my-admin/login/'
     success_url = reverse_lazy('dashboard:project_list')
 
@@ -192,11 +191,8 @@ class ServiceDeleteView(LoginRequiredMixin, DeleteView):
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     """Update existing project"""
     model = Project
+    form_class = ProjectForm
     template_name = 'dashboard/projects/form.html'
-    fields = [
-        'title', 'short_description', 'description', 'location', 'client_name', 'project_type',
-        'service_category', 'start_date', 'featured_image', 'is_featured', 'is_published'
-    ]
     login_url = '/my-admin/login/'
     success_url = reverse_lazy('dashboard:project_list')
 
@@ -213,6 +209,60 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Project deleted successfully!')
+        return super().delete(request, *args, **kwargs)
+
+
+# Project Category Management Views
+class ProjectCategoryListView(LoginRequiredMixin, ListView):
+    """List all project categories in dashboard"""
+    model = ProjectCategory
+    template_name = 'dashboard/projects/categories/list.html'
+    context_object_name = 'categories'
+    login_url = '/my-admin/login/'
+
+    def get_queryset(self):
+        qs = ProjectCategory.objects.all()
+        search = self.request.GET.get('q')
+        if search:
+            qs = qs.filter(Q(name__icontains=search) | Q(description__icontains=search))
+        return qs.order_by('order', 'name')
+
+
+class ProjectCategoryCreateView(LoginRequiredMixin, CreateView):
+    """Create new project category"""
+    model = ProjectCategory
+    fields = ['name', 'description', 'color', 'order', 'is_active']
+    template_name = 'dashboard/projects/categories/form.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:project_category_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Project category created successfully!')
+        return super().form_valid(form)
+
+
+class ProjectCategoryUpdateView(LoginRequiredMixin, UpdateView):
+    """Update existing project category"""
+    model = ProjectCategory
+    fields = ['name', 'description', 'color', 'order', 'is_active']
+    template_name = 'dashboard/projects/categories/form.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:project_category_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Project category updated successfully!')
+        return super().form_valid(form)
+
+
+class ProjectCategoryDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete project category"""
+    model = ProjectCategory
+    template_name = 'dashboard/projects/categories/delete.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:project_category_list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Project category deleted successfully!')
         return super().delete(request, *args, **kwargs)
 
 # Service Management Views
@@ -257,6 +307,18 @@ class ServiceCreateView(LoginRequiredMixin, CreateView):
     ]
     login_url = '/my-admin/login/'
     success_url = reverse_lazy('dashboard:service_list')
+
+    def get_initial(self):
+        """Pre-select category if coming from category page"""
+        initial = super().get_initial()
+        category_id = self.request.GET.get('category')
+        if category_id:
+            try:
+                category = ServiceCategory.objects.get(pk=category_id)
+                initial['category'] = category
+            except ServiceCategory.DoesNotExist:
+                pass
+        return initial
 
     def form_valid(self, form):
         messages.success(self.request, 'Service created successfully!')
@@ -1065,8 +1127,9 @@ class SettingsView(LoginRequiredMixin, TemplateView):
         return self.render_to_response(context)
 
 
+# User Management Views
 class UsersListView(LoginRequiredMixin, ListView):
-    """Read-only list of users"""
+    """List all users with CRUD functionality"""
     model = User
     template_name = 'dashboard/users/list.html'
     context_object_name = 'users'
@@ -1079,6 +1142,48 @@ class UsersListView(LoginRequiredMixin, ListView):
         if search:
             qs = qs.filter(Q(username__icontains=search) | Q(email__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search))
         return qs
+
+
+class UserCreateView(LoginRequiredMixin, CreateView):
+    """Create new user"""
+    model = User
+    form_class = CustomUserCreationForm
+    template_name = 'dashboard/users/form.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:users')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'User created successfully!')
+        return super().form_valid(form)
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    """Update existing user"""
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'dashboard/users/form.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:users')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'User updated successfully!')
+        return super().form_valid(form)
+
+
+class UserDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete user"""
+    model = User
+    template_name = 'dashboard/users/delete.html'
+    login_url = '/my-admin/login/'
+    success_url = reverse_lazy('dashboard:users')
+
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user == request.user:
+            messages.error(request, 'You cannot delete your own account!')
+            return redirect('dashboard:users')
+        messages.success(request, f'User "{user.username}" deleted successfully!')
+        return super().delete(request, *args, **kwargs)
 
 
 class ActivityLogListView(LoginRequiredMixin, ListView):

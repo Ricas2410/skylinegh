@@ -1,0 +1,150 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit Project Category{% else %}Add New Project Category{% endif %}{% endblock %}
+{% block page_title %}{% if object %}Edit Project Category{% else %}Add New Project Category{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            {% if object %}Edit Project Category{% else %}Add New Project Category{% endif %}
+        </h2>
+        <p class="text-gray-600">
+            {% if object %}Update category details and information{% else %}Create a new project category{% endif %}
+        </p>
+    </div>
+    <a href="{% url 'dashboard:project_category_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Categories
+    </a>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <form method="post" class="p-8">
+        {% csrf_token %}
+        
+        <!-- Display form errors -->
+        {% if form.errors %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <h3 class="text-red-800 font-medium mb-2">Please correct the following errors:</h3>
+                <ul class="text-red-700 text-sm space-y-1">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field|title }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Category Name -->
+                <div>
+                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Category Name *
+                    </label>
+                    {{ form.name }}
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Description
+                    </label>
+                    {{ form.description }}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Color -->
+                <div>
+                    <label for="{{ form.color.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Color
+                    </label>
+                    {{ form.color }}
+                    <p class="text-sm text-gray-500 mt-1">Choose a color for this category (hex format)</p>
+                </div>
+
+                <!-- Order -->
+                <div>
+                    <label for="{{ form.order.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Display Order
+                    </label>
+                    {{ form.order }}
+                    <p class="text-sm text-gray-500 mt-1">Lower numbers appear first</p>
+                </div>
+
+                <!-- Active Status -->
+                <div class="flex items-center">
+                    {{ form.is_active }}
+                    <label for="{{ form.is_active.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                        Active (visible to users)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="mt-8 flex items-center justify-end space-x-4">
+            <a href="{% url 'dashboard:project_category_list' %}" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200">
+                Cancel
+            </a>
+            <button type="submit" class="btn-primary-submit">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {% if object %}Update Category{% else %}Create Category{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Custom form field styling */
+input[type="text"], input[type="number"], input[type="color"], textarea {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+textarea {
+    @apply min-h-32;
+}
+
+input[type="checkbox"] {
+    @apply h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded;
+}
+
+/* Submit button styling with fallback colors */
+.btn-primary-submit {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
+
+.btn-primary-submit:hover {
+    background: linear-gradient(135deg, #3730a3 0%, #1e40af 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35) !important;
+}
+
+.btn-primary-submit:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
+</style>
+{% endblock %}

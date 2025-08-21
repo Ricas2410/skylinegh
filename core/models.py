@@ -32,6 +32,10 @@ class SiteSettings(models.Model):
     region = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
 
+    # GPS Coordinates for map
+    latitude = models.DecimalField(max_digits=10, decimal_places=8, blank=True, null=True, help_text="Latitude for Google Maps")
+    longitude = models.DecimalField(max_digits=11, decimal_places=8, blank=True, null=True, help_text="Longitude for Google Maps")
+
     # Social Media
     facebook_url = models.URLField(blank=True)
     twitter_url = models.URLField(blank=True)

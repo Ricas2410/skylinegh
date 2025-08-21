@@ -16,6 +16,12 @@ urlpatterns = [
     path('projects/<int:pk>/delete/', views.ProjectDeleteView.as_view(), name='project_delete'),
     path('projects/<int:pk>/images/', views.ProjectImageManageView.as_view(), name='project_images'),
 
+    # Project categories
+    path('projects/categories/', views.ProjectCategoryListView.as_view(), name='project_category_list'),
+    path('projects/categories/create/', views.ProjectCategoryCreateView.as_view(), name='project_category_create'),
+    path('projects/categories/<int:pk>/edit/', views.ProjectCategoryUpdateView.as_view(), name='project_category_edit'),
+    path('projects/categories/<int:pk>/delete/', views.ProjectCategoryDeleteView.as_view(), name='project_category_delete'),
+
     # Service management
     path('services/', views.ServiceListView.as_view(), name='service_list'),
     path('services/create/', views.ServiceCreateView.as_view(), name='service_create'),
@@ -73,8 +79,11 @@ urlpatterns = [
     path('service-images/<int:pk>/edit/', views.ServicePageImageUpdateView.as_view(), name='service_image_edit'),
     path('service-images/<int:pk>/delete/', views.ServicePageImageDeleteView.as_view(), name='service_image_delete'),
 
-    # Users (read-only list)
+    # User management
     path('users/', views.UsersListView.as_view(), name='users'),
+    path('users/create/', views.UserCreateView.as_view(), name='user_create'),
+    path('users/<int:pk>/edit/', views.UserUpdateView.as_view(), name='user_edit'),
+    path('users/<int:pk>/delete/', views.UserDeleteView.as_view(), name='user_delete'),
 
     # Activity logs
     path('activity/', views.ActivityLogListView.as_view(), name='activity'),

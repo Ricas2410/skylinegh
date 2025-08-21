@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete Project Category{% endblock %}
+{% block page_title %}Delete Project Category{% endblock %}
+{% block content %}
+<div class="bg-white rounded-2xl border border-slate-200 p-8 max-w-xl mx-auto">
+  <h2 class="text-xl font-semibold text-slate-800 mb-4">Confirm Deletion</h2>
+  <p class="text-slate-600 mb-6">Are you sure you want to delete the project category <span class="font-semibold">"{{ object.name }}"</span>? This action cannot be undone.</p>
+  
+  {% if object.project_set.count > 0 %}
+  <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-yellow-800">Warning</h3>
+        <div class="mt-2 text-sm text-yellow-700">
+          <p>This category has {{ object.project_set.count }} project{{ object.project_set.count|pluralize }} associated with it. Deleting this category will remove the category assignment from these projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  
+  <form method="post">
+    {% csrf_token %}
+    <div class="flex items-center space-x-3">
+      <a href="{% url 'dashboard:project_category_list' %}" class="btn-secondary">Cancel</a>
+      <button type="submit" class="btn-primary bg-red-600 hover:bg-red-700">Delete Category</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

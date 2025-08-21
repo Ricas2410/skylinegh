@@ -35,7 +35,7 @@
             </select>
             <button class="btn-secondary" type="submit">Filter</button>
         </form>
-        <a href="{% url 'dashboard:service_create' %}" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors duration-200 flex items-center">
+        <a href="{% url 'dashboard:service_create' %}" class="btn-primary-submit" style="text-decoration: none;">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
@@ -222,3 +222,31 @@
     </div>
 </div>
 {% endblock %}
+
+<style>
+/* Submit button styling with fallback colors */
+.btn-primary-submit {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
+
+.btn-primary-submit:hover {
+    background: linear-gradient(135deg, #3730a3 0%, #1e40af 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35) !important;
+}
+
+.btn-primary-submit:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
+</style>

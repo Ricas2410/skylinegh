@@ -34,8 +34,11 @@
       <span class="text-xs px-2 py-1 rounded-full {{ cat.is_active|yesno:'bg-green-100 text-green-700,bg-slate-100 text-slate-600' }}">{{ cat.is_active|yesno:'Active,Inactive' }}</span>
     </div>
     <div class="mt-4 flex items-center justify-between text-sm">
-      <p class="text-slate-500">{{ cat.services.count }} service{{ cat.services.count|pluralize }}</p>
-      <a href="{% url 'dashboard:service_category_edit' cat.pk %}" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+      <a href="{% url 'dashboard:service_list' %}?category={{ cat.pk }}" class="text-slate-500 hover:text-slate-700">{{ cat.services.count }} service{{ cat.services.count|pluralize }}</a>
+      <div class="flex items-center space-x-2">
+        <a href="{% url 'dashboard:service_create' %}?category={{ cat.pk }}" class="text-green-600 hover:text-green-800">+ Add Service</a>
+        <a href="{% url 'dashboard:service_category_edit' cat.pk %}" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+      </div>
     </div>
   </div>
   {% empty %}
