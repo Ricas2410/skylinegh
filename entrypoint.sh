@@ -53,6 +53,31 @@ python manage.py createcachetable 2>/dev/null || echo "✅ Cache table exists"
 echo "⚙️ Initializing site settings..."
 python manage.py init_site_settings 2>/dev/null || echo "✅ Site settings exist"
 
+# Update site statistics if they're zero (for new deployments)
+echo "📊 Checking site statistics..."
+python -c "
+import os, django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skylinegh.production_settings')
+django.setup()
+from core.models import SiteSettings
+try:
+    s = SiteSettings.objects.first()
+    if s and hasattr(s, 'projects_completed'):
+        if s.projects_completed == 0:
+            s.projects_completed = 500
+            s.square_feet_built = 1000000
+            s.client_satisfaction = 98
+            s.years_experience = 25
+            s.save()
+            print('✅ Statistics updated with default values')
+        else:
+            print('✅ Statistics already configured')
+    else:
+        print('⚠️ Statistics fields not found - migration may be needed')
+except Exception as e:
+    print(f'⚠️ Statistics check failed: {e}')
+" 2>/dev/null || echo "⚠️ Statistics check skipped"
+
 # Skip sample data in production to save startup time
 if [ "${POPULATE_SAMPLE_DATA:-false}" = "true" ]; then
     echo "📊 Populating sample data..."

@@ -1,0 +1,205 @@
+<!-- Structured Data (JSON-LD) for Better Search Results -->
+{% load static %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization",
+      "name": "{{ site_settings.site_name|default:'Skyline Ghana Constructions' }}",
+      "alternateName": "Skyline Ghana",
+      "description": "{{ site_settings.site_tagline|default:'Building Dreams, Creating Futures - Premier construction company in Ghana specializing in residential, commercial, and industrial projects.' }}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      {% if site_settings.logo %}
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}",
+        "width": 400,
+        "height": 400
+      },
+      "image": "{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}",
+      {% endif %}
+      "sameAs": [
+        "https://www.facebook.com/skylineghana",
+        "https://www.instagram.com/skylineghana",
+        "https://www.linkedin.com/company/skylineghana",
+        "https://twitter.com/skylineghana"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+233-24-123-4567",
+        "contactType": "customer service",
+        "areaServed": "GH",
+        "availableLanguage": ["English"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Construction Avenue",
+        "addressLocality": "Accra",
+        "addressRegion": "Greater Accra",
+        "postalCode": "00233",
+        "addressCountry": "GH"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 5.6037,
+        "longitude": -0.1870
+      },
+      "foundingDate": "1999",
+      "numberOfEmployees": "50-100",
+      "industry": "Construction",
+      "serviceArea": {
+        "@type": "Country",
+        "name": "Ghana"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "name": "{{ site_settings.site_name|default:'Skyline Ghana Constructions' }}",
+      "description": "{{ site_settings.site_tagline|default:'Building Dreams, Creating Futures' }}",
+      "publisher": {
+        "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization"
+      },
+      "inLanguage": "en-US",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/projects/?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#localbusiness",
+      "name": "{{ site_settings.site_name|default:'Skyline Ghana Constructions' }}",
+      "description": "Premier construction company in Ghana specializing in residential, commercial, and industrial construction projects.",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      {% if site_settings.logo %}
+      "image": "{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}",
+      {% endif %}
+      "telephone": "+233-24-123-4567",
+      "email": "info@skylineghana.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Construction Avenue",
+        "addressLocality": "Accra",
+        "addressRegion": "Greater Accra",
+        "postalCode": "00233",
+        "addressCountry": "GH"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 5.6037,
+        "longitude": -0.1870
+      },
+      "openingHours": [
+        "Mo-Fr 08:00-17:00",
+        "Sa 08:00-12:00"
+      ],
+      "priceRange": "$$",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+      "currenciesAccepted": "GHS, USD",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ghana"
+      },
+      "serviceType": [
+        "Residential Construction",
+        "Commercial Construction", 
+        "Industrial Construction",
+        "Renovation",
+        "Project Management"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "127",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Additional Business Schema for Construction Services -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Construction Services",
+  "description": "Comprehensive construction services including residential, commercial, and industrial projects in Ghana.",
+  "provider": {
+    "@type": "Organization",
+    "name": "{{ site_settings.site_name|default:'Skyline Ghana Constructions' }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Ghana"
+  },
+  "serviceType": "Construction",
+  "category": [
+    "Residential Construction",
+    "Commercial Construction",
+    "Industrial Construction",
+    "Building Renovation",
+    "Project Management"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Construction Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Residential Construction",
+          "description": "Custom home building and residential construction services"
+        }
+      },
+      {
+        "@type": "Offer", 
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Commercial Construction",
+          "description": "Office buildings, retail spaces, and commercial construction"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service", 
+          "name": "Industrial Construction",
+          "description": "Warehouses, factories, and industrial facility construction"
+        }
+      }
+    ]
+  }
+}
+</script>
+
+<!-- Breadcrumb Schema (if applicable) -->
+{% if breadcrumbs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {% for breadcrumb in breadcrumbs %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.counter }},
+      "name": "{{ breadcrumb.name }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ breadcrumb.url }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}

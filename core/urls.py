@@ -12,4 +12,5 @@ urlpatterns = [
     path('privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy_policy'),
     path('terms-of-service/', views.TermsOfServiceView.as_view(), name='terms_of_service'),
     path('sitemap/', views.SitemapView.as_view(), name='sitemap'),
+    path('site.webmanifest', views.WebManifestView.as_view(), name='webmanifest'),
 ]

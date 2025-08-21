@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, FormView, DetailView
+from django.views.generic import TemplateView, FormView, DetailView, View
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.mail import send_mail
@@ -147,3 +147,53 @@ class TermsOfServiceView(BaseContextMixin, TemplateView):
 class SitemapView(BaseContextMixin, TemplateView):
     """Sitemap page"""
     template_name = 'core/sitemap.html'
+
+
+class WebManifestView(View):
+    """Web App Manifest for PWA support and better search results"""
+
+    def get(self, request, *args, **kwargs):
+        from django.http import JsonResponse
+        from django.conf import settings
+
+        try:
+            site_settings = SiteSettings.objects.first()
+        except SiteSettings.DoesNotExist:
+            site_settings = None
+
+        manifest = {
+            "name": site_settings.site_name if site_settings else "Skyline Ghana Constructions",
+            "short_name": "Skyline Ghana",
+            "description": site_settings.site_tagline if site_settings else "Building Dreams, Creating Futures",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#4f46e5",
+            "orientation": "portrait-primary",
+            "scope": "/",
+            "lang": "en",
+            "categories": ["business", "construction", "architecture"],
+            "icons": []
+        }
+
+        # Add icons if logo is available
+        if site_settings and site_settings.logo:
+            logo_url = request.build_absolute_uri(site_settings.logo.url)
+            manifest["icons"] = [
+                {
+                    "src": logo_url,
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": logo_url,
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                }
+            ]
+
+        response = JsonResponse(manifest)
+        response['Content-Type'] = 'application/manifest+json'
+        return response

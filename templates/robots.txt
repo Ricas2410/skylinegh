@@ -61,6 +61,7 @@ Allow: /
 
 # Sitemap locations
 Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap/
 
 # General crawl delay (helps with server load)
 Crawl-delay: 1

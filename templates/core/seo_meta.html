@@ -24,6 +24,11 @@
 <meta property="og:image:alt" content="{{ og_title }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+{% elif site_settings.logo %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">
+<meta property="og:image:alt" content="{{ site_settings.site_name }} - {{ og_title }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 {% endif %}
 
 <!-- Twitter Card Meta Tags -->
@@ -35,6 +40,9 @@
 {% if og_image %}
 <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_image }}">
 <meta name="twitter:image:alt" content="{{ og_title }}">
+{% elif site_settings.logo %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">
+<meta name="twitter:image:alt" content="{{ site_settings.site_name }} - {{ og_title }}">
 {% endif %}
 
 <!-- Additional SEO Meta Tags -->
@@ -51,9 +59,43 @@
 <meta name="business:contact_data:country_name" content="Ghana">
 
 <!-- Favicon and Icons for Search Results -->
-<!-- Using emoji as temporary favicon until proper icons are created -->
+{% load static %}
+<!-- Primary favicon with fallback to site logo -->
+{% if site_settings.favicon %}
+<link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{ site_settings.favicon.url }}">
+{% elif site_settings.logo %}
+<link rel="icon" type="image/png" href="{{ site_settings.logo.url }}">
+<link rel="shortcut icon" type="image/png" href="{{ site_settings.logo.url }}">
+{% else %}
+<!-- Fallback SVG favicon with construction theme -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
-<link rel="manifest" href="{% load static %}{% static 'images/site.webmanifest' %}">
+{% endif %}
+
+<!-- Apple Touch Icons for better mobile/search display -->
+{% if site_settings.logo %}
+<link rel="apple-touch-icon" sizes="180x180" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="152x152" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="144x144" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="120x120" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="114x114" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="76x76" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="72x72" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="60x60" href="{{ site_settings.logo.url }}">
+<link rel="apple-touch-icon" sizes="57x57" href="{{ site_settings.logo.url }}">
+{% endif %}
+
+<!-- Microsoft Tiles -->
+{% if site_settings.logo %}
+<meta name="msapplication-TileImage" content="{{ site_settings.logo.url }}">
+<meta name="msapplication-square70x70logo" content="{{ site_settings.logo.url }}">
+<meta name="msapplication-square150x150logo" content="{{ site_settings.logo.url }}">
+<meta name="msapplication-wide310x150logo" content="{{ site_settings.logo.url }}">
+<meta name="msapplication-square310x310logo" content="{{ site_settings.logo.url }}">
+{% endif %}
+
+<!-- Web App Manifest -->
+<link rel="manifest" href="{% url 'core:webmanifest' %}">
 
 <!-- Additional meta for search engines -->
 <meta name="google" content="notranslate">
@@ -61,10 +103,4 @@
 <meta name="format-detection" content="address=yes">
 <meta name="format-detection" content="email=yes">
 
-<!-- Twitter Card Meta Tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ og_title }}">
-<meta name="twitter:description" content="{{ og_description }}">
-{% if og_image %}
-<meta name="twitter:image" content="{{ og_image }}">
-{% endif %}
+
