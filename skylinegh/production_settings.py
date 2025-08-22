@@ -24,7 +24,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 # Database configuration for Neon PostgreSQL with optimizations
 DATABASES = {
     'default': dj_database_url.parse(
-        'postgresql://neondb_owner:npg_ezEGqQuRU1w3@ep-autumn-rice-a2j7dw0g-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+        os.getenv('DATABASE_URL', 'postgresql://neondb_owner:npg_ezEGqQuRU1w3@ep-autumn-rice-a2j7dw0g-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'),
         conn_max_age=600,  # 10 minutes connection pooling
         conn_health_checks=True,
     )

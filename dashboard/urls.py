@@ -65,6 +65,7 @@ urlpatterns = [
     path('analytics/', views.AnalyticsView.as_view(), name='analytics'),
     path('settings/', views.SettingsView.as_view(), name='settings'),
     path('settings/backup/', views.CreateBackupView.as_view(), name='create_backup'),
+    path('settings/restore/', views.RestoreBackupView.as_view(), name='restore_backup'),
 
     # Backup Management API
     path('api/backup/', views.AdminBackupAPIView.as_view(), name='admin_backup_api'),

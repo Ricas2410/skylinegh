@@ -15,9 +15,9 @@ RUN apt-get update \
         gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install Python dependencies globally in the builder stage
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Production stage
 FROM python:3.11-slim
@@ -26,7 +26,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=skylinegh.production_settings
-ENV PATH="/home/appuser/.local/bin:$PATH"
+# No need to add /home/appuser/.local/bin to PATH if packages are installed globally
 
 # Install runtime dependencies only
 RUN apt-get update \
@@ -43,8 +43,10 @@ RUN adduser --disabled-password --gecos '' appuser
 # Set work directory
 WORKDIR /app
 
-# Copy Python dependencies from builder stage
-COPY --from=builder /root/.local /home/appuser/.local
+# Copy Python dependencies from builder stage (now installed globally)
+# This copies the entire site-packages, which is where global installs go
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy entrypoint script first as root
 COPY entrypoint.sh /entrypoint.sh

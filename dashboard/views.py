@@ -415,7 +415,7 @@ class CreateBackupView(LoginRequiredMixin, TemplateView):
     login_url = '/my-admin/login/'
 
     def get(self, request, *args, **kwargs):
-        dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        dt = datetime.now().strftime('%Y%m%d_%H%M%S')
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
             # dumpdata
@@ -434,6 +434,22 @@ class CreateBackupView(LoginRequiredMixin, TemplateView):
         response = HttpResponse(zip_buffer.getvalue(), content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="skylinegh_backup_{dt}.zip"'
         return response
+
+class RestoreBackupView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard/restore_backup.html'
+    login_url = '/my-admin/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # You might want to fetch backup history here to display
+        # context['backups'] = AdminBackupHistoryAPIView().get(self.request).json().get('backups', [])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # This view will primarily render the form. The actual restore logic
+        # will be handled by AdminRestoreAPIView via JavaScript.
+        messages.info(request, "Please select a backup file to restore.")
+        return self.get(request, *args, **kwargs)
 
 
 # Advanced Backup Management API Views
